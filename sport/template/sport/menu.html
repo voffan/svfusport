@@ -1,0 +1,26 @@
+{% extends "sport/index.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3" style="background-color: #ffffff">
+            <div class="list-group">
+                <a class="list-group-item list-group-item-warning">
+                    <span>Спорт</span>
+                </a>
+
+                {% for sp in sports %}
+
+                <a href="#table" onclick="myFunk('tbl_1'); return false"
+                   class="list-group-item list-group-item-action list-group-item-info">
+                    <span>{{ sp.name }}</span>
+                </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+        {% block inner_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

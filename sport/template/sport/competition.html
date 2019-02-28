@@ -1,0 +1,43 @@
+{% extends "sport/menu.html" %}
+{% block inner_content %}
+<div class="col-md-6" style="background-color: #ffffff">
+
+    <ul class="nav nav-pills nav-fill nav-justified">
+        <li>
+            <button type="button" class="nav-link nav-item">Результаты</button>
+        </li>
+        <li>
+            <button type="button" class="nav-link nav-item">События</button>
+        </li>
+    </ul>
+
+    <p>Отображение матчей</p>
+
+    <div class="table-responsive-xl">
+        <table class="table table-hover table-bordered table-sm table-justified" id="tbl_1">
+            <thead class="active thead-light">
+            <tr>
+                <th class="table-warning" style="width: 5%">№</th>
+                <th style="width: 20%">Команда</th>
+                <th style="width: 20%">Время</th>
+                <th style="width: 20%">Период</th>
+                <th style="width: 20%">Адрес</th>
+                <th style="width: 20%">Название СМ</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for t in results %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ t.team.organization.name }}</td>
+                <td>{{ t.period.begin }}</td>
+                <td>{{ t.period.end }}</td>
+                <td>{{ t.compitition.place.address }}</td>
+                <td>{{ t.compitition.place.name }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
