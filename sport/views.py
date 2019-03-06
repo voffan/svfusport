@@ -1,16 +1,32 @@
 import datetime
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import HttpResponse
 from sport.models import Sport, Period, Team, Place, TeamResult
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 
-
+from .forms import TeamForm, ChangeTeamForm
+#from django.contrib.formtools.wizard.views import SessionWizardView
 # Create your views here.
+'''
+FORMS = [
+    ('team', TeamForm),
+    ('changeTeam', ChangeTeamForm)
+]
 
+TEMPLATES = {
+    'team': 'declaration.html',
+    'changeTeam': 'table_input.html'
+}
+
+class AddTeamWizard():
+
+
+'''
 def index(request):
-    return render(request, 'sport/competition.html')
+    return render(request, 'sport/declaration.html')
 
 
 def sport_view(request):
@@ -20,21 +36,44 @@ def sport_view(request):
     }
     return render(request, 'sport/competition.html', context)
 
-'''
-def table_view(request):
-    team = Team.objects.all()
-    period = Period.objects.all()
-    place = Place.objects.all()
-    sports = Sport.objects.all()
 
+def form_create_view(request):
+    if request.method == "POST":
+        my_new_competition = request.POST.get('competition')
+        Team.objects.create(competition = my_new_competition)
     context = {
-        'sports': sports,
-        'team': team,
-        'period': period,
-        'place': place
+
     }
-    return render(request, 'sport/competition.html', context)
-'''
+    return render(request, 'sport/declaration.html', context)
+
+
+def table_input(request):
+    sport = request.POST['sport']
+    org = request.POST['org']
+    team = request.POST['team']
+    zach = request.POST['zach']
+
+
+    context={
+        'sport': sport,
+        'org': org,
+        'team': team,
+        'zach': zach
+    }
+    return render(request, 'sport/table_input.html', context)
+
+
+def form_create_view(request):
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except:
+                return HttpResponse('Error')
+        return HttpResponse('Success') #redirect(reverse('sport:table_input'))
+    return render(request, 'sport/declaration.html', {'form': TeamForm()})
+
 
 def table_view(request):
     team = Team.objects.all()

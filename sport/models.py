@@ -54,17 +54,6 @@ class Department(models.Model):
     def __str__(self):
         return self.name
 
-
-class Team(models.Model):
-    competition = models.ForeignKey(Sport, verbose_name="Вид Спорта", db_index=True, on_delete=models.CASCADE)
-    organization = models.ForeignKey(Department, verbose_name="Организация", db_index=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, verbose_name= "Название команды", db_index=True)
-    not_resultable = models.BooleanField(verbose_name='Вне зачета', default=False)
-
-    def __str__(self):
-        return self.organization.name + ' : команда -- : ' + self.name
-
-
 '''
 class Jrebiy(models.Model):
     sport = models.ForeignKey(Sport, verbose_name = "Вид Спорта", db_index = True, on_delete = models.CASCADE)
@@ -75,13 +64,23 @@ class Jrebiy(models.Model):
 '''
 
 
-class Compitition(models.Model):
+class Competition(models.Model):
     date = models.DateField(verbose_name = "Дата соревнования", default=datetime.date.today())
     place = models.ForeignKey(Place, verbose_name = "Место проведения", null = True, blank = True, on_delete = models.CASCADE)
     sport = models.ForeignKey(Sport, verbose_name = "Вид Спорта", db_index = True, on_delete = models.CASCADE)
 
     def __str__(self):
-        return self.place.name + ' : ' + self.place.address
+        return self.sport.name + ' : ' + str(self.date)
+
+
+class Team(models.Model):
+    competition = models.ForeignKey(Competition, verbose_name="Вид Спорта", db_index=True, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Department, verbose_name="Организация", db_index=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, verbose_name= "Название команды", db_index=True)
+    not_resultable = models.BooleanField(verbose_name='Вне зачета', default=False)
+
+    def __str__(self):
+        return self.organization.name + ' : команда -- : ' + self.name
 
 
 '''class ResultTable(models.Model):
@@ -97,7 +96,7 @@ class Compitition(models.Model):
 
 class TeamResult(models.Model):
     points = models.PositiveIntegerField(verbose_name = "Очки", null=True, blank=True)
-    compitition = models.ForeignKey(Compitition, verbose_name = "Соревнование", db_index = True, on_delete=models.CASCADE)
+    compitition = models.ForeignKey(Competition, verbose_name = "Соревнование", db_index = True, on_delete=models.CASCADE)
     result = models.PositiveIntegerField(verbose_name= "Место", null=True, blank=True)
     team = models.ForeignKey(Team, verbose_name="Команда", db_index=True, on_delete=models.CASCADE)
 
@@ -130,7 +129,7 @@ class TeamMember(models.Model):
 
 
 class SportsmanResult(models.Model):
-    compitition = models.ForeignKey(Compitition, verbose_name="Вид Спорта", db_index=True, on_delete=models.CASCADE)
+    compitition = models.ForeignKey(Competition, verbose_name= "Вид Спорта", db_index=True, on_delete=models.CASCADE)
     place = models.IntegerField(verbose_name="Место")
     points = models.DecimalField(verbose_name="Очки", max_length=100, max_digits=7, decimal_places=2)
     sportsman = models.OneToOneField(TeamMember, verbose_name="Спортсмен", db_index=True, on_delete=models.CASCADE)
@@ -149,7 +148,7 @@ class Organizator(Person):
 
 class Judge(Person):
     judge_position = models.CharField(max_length=20, choices=JudesType, verbose_name="Класс судьи", blank=False)
-    compitition = models.ForeignKey(Compitition, verbose_name="Соревнование", db_index=True, on_delete=models.CASCADE)
+    compitition = models.ForeignKey(Competition, verbose_name= "Соревнование", db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
 
     def __init__(self):

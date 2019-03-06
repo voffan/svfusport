@@ -1,0 +1,30 @@
+{% extends "sport/declaration.html" %}
+{% block table_input %}
+<div>
+    <table class="table table-hover table-bordered table-sm table-justified" id="#table_1">
+        <thead class="active thead-light">
+            <tr>
+                <th class="table-warning" style="width: 5%">№</th>
+                <th style="width: 20%">Вид спорта</th>
+                <th style="width: 20%">Организация</th>
+                <th style="width: 20%">Команда</th>
+                <th style="width: 20%">Зачет/Вне зачета</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+
+                <td>{{ forloop.counter }}</td>
+                <td>{{sport}}</td>
+                <td>{{org}}</td>
+                <td>{{team}}</td>
+                <td>{{zach}}</td>
+
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
