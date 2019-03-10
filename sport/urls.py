@@ -10,6 +10,7 @@ urlpatterns = [
     path('sport/', views.sport_view, name="sport-view"),
     path('table/', views.table_view, name="table-view"),
 
-    path('create/', views.form_create_view, name="create"),
-    path('table_input', views.table_input, name="table_input"),
+    path('create/', views.form_create_view, name="form-create-view"),
+    path('teamtable/', views.teamtable, name="teamtable"),
+    path('change/>', views.change_link, name="change-link"),
 ]

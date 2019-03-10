@@ -1,9 +1,10 @@
 {% extends "sport/index.html" %}
-{% block content_declare %}
+{% block content_add %}
 
-<button type="button" class="btn-sm btn-info">Оформить заявку</button>
+<!--<button type="button" class="btn-sm btn-info">Оформить заявку</button>-->
 
 <div class="col-sm">
+
     <form method="POST" action="">{% csrf_token %}
 
         <!--div class="form-group row">
@@ -39,13 +40,14 @@
             <label for="zach0" class="form-check-label">Вне зачета</label>
         </div-->
         {{ form }}
-        <input type="submit" value="Save">
-        <buttom type="button" class="btn-sm btn-info" formaction="fill_table.js">Подать заявку</buttom>
+        <input type="submit" value="Сохранить" />
+
+        <a href="http://localhost:8000/CM/teamtable/">
+         <input type="button" value="Редактировать">
+        </a>
     </form>
+
 </div>
 
-<div>
-    {% block table_input %}{% endblock %}
-</div>
 
 {% endblock %}

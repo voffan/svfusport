@@ -37,30 +37,12 @@ def sport_view(request):
     return render(request, 'sport/competition.html', context)
 
 
-def form_create_view(request):
-    if request.method == "POST":
-        my_new_competition = request.POST.get('competition')
-        Team.objects.create(competition = my_new_competition)
-    context = {
-
-    }
-    return render(request, 'sport/declaration.html', context)
-
-
-def table_input(request):
-    sport = request.POST['sport']
-    org = request.POST['org']
-    team = request.POST['team']
-    zach = request.POST['zach']
-
-
+def teamtable(request):
+    teams = Team.objects.all()
     context={
-        'sport': sport,
-        'org': org,
-        'team': team,
-        'zach': zach
+        'teams': teams,
     }
-    return render(request, 'sport/table_input.html', context)
+    return render(request, 'sport/teamtable.html', context)
 
 
 def form_create_view(request):
@@ -71,7 +53,7 @@ def form_create_view(request):
                 form.save()
             except:
                 return HttpResponse('Error')
-        return HttpResponse('Success') #redirect(reverse('sport:table_input'))
+       # return HttpResponse('Success') #redirect(reverse('sport:table_input'))
     return render(request, 'sport/declaration.html', {'form': TeamForm()})
 
 
@@ -94,3 +76,19 @@ def table_view(request):
 
     return render(request, 'sport/competition.html', context)
 
+'''
+проверочнафункция
+def changelink(request, id):
+
+    if request.method == 'GET':
+        org = request.GET.get('t.id')
+        res = Team.objects.all().get(id=org)
+        return HttpResponse(res)
+'''
+
+def change_link(request):
+
+    if request.method == 'GET':
+        org = request.GET.get('t.id')
+        res = Team.objects.all().get(id=org)
+        return HttpResponse(res)

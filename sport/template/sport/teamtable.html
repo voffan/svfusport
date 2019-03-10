@@ -1,28 +1,28 @@
-{% extends "sport/declaration.html" %}
+{% extends "sport/index.html" %}
 {% block table_input %}
 <div>
     <table class="table table-hover table-bordered table-sm table-justified" id="#table_1">
         <thead class="active thead-light">
             <tr>
                 <th class="table-warning" style="width: 5%">№</th>
-                <th style="width: 20%">Вид спорта</th>
+                <th style="width: 20%">Соревнование</th>
                 <th style="width: 20%">Организация</th>
                 <th style="width: 20%">Команда</th>
                 <th style="width: 20%">Зачет/Вне зачета</th>
             </tr>
         </thead>
         <tbody>
+            {% for t in teams %}
 
-            <tr>
-
-                <td>{{ forloop.counter }}</td>
-                <td>{{sport}}</td>
-                <td>{{org}}</td>
-                <td>{{team}}</td>
-                <td>{{zach}}</td>
-
+            <tr onclick="location.href='/CM/change/?t.id={{t.id}}'">
+                    <td>{{ t.id }}</td>
+                    <td>{{t.competition}} </td>
+                    <td>{{t.organization}}</td>
+                    <td>{{t.name}} </td>
+                    <td>{{t.not_resultable}}</td>
             </tr>
 
+            {% endfor %}
         </tbody>
     </table>
 
