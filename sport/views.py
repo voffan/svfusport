@@ -1,13 +1,13 @@
 import datetime
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse
 from sport.models import Sport, Period, Team, Place, TeamResult
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 
-from .forms import TeamForm, ChangeTeamForm
+from .forms import TeamForm
 #from django.contrib.formtools.wizard.views import SessionWizardView
 # Create your views here.
 '''
@@ -76,19 +76,24 @@ def table_view(request):
 
     return render(request, 'sport/competition.html', context)
 
-'''
-проверочнафункция
+
 def changelink(request, id):
-
-    if request.method == 'GET':
-        org = request.GET.get('t.id')
-        res = Team.objects.all().get(id=org)
+        res = Team.objects.all().get(id=id)
         return HttpResponse(res)
-'''
 
-def change_link(request):
 
-    if request.method == 'GET':
-        org = request.GET.get('t.id')
-        res = Team.objects.all().get(id=org)
-        return HttpResponse(res)
+def form_change_view(request, id):
+    team = get_object_or_404(Team, id=id)
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            team.competition = form.cleaned_data['competition']
+            team.organization = form.cleaned_data['organization']
+            team.name = form.cleaned_data['name']
+            team.not_resultable = form.cleaned_data['not_resultable']
+            team.save()
+        return HttpResponse("good")
+    else:
+        form = TeamForm()
+    return render(request, 'sport/change.html', {'form': TeamForm()})
+

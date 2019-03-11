@@ -29,16 +29,7 @@ class TeamForm(forms.ModelForm):
             'not_resultable'
         ]
 
-
-class ChangeTeamForm(TeamForm):
-    competition = forms.ModelChoiceField(queryset = Competition.objects.filter(date__lte = datetime.date.today()).order_by('date'),empty_label = 'Выберете соревнование')
-    organization = forms.ModelChoiceField(queryset = Department.objects.all(), empty_label = 'Выберете УЧП')
-
-    class Meta:
-        model = Team
-        fields = [
-            'competition',
-            'organization',
-            'name',
-            'not_resultable'
-        ]
+'''
+class TeamChangeForm(forms.ModelForm):
+    competition = 
+'''

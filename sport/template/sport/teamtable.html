@@ -13,8 +13,7 @@
         </thead>
         <tbody>
             {% for t in teams %}
-
-            <tr onclick="location.href='/CM/change/?t.id={{t.id}}'">
+            <tr onclick="location.href='/CM/change/{{t.id}}/chan/'">
                     <td>{{ t.id }}</td>
                     <td>{{t.competition}} </td>
                     <td>{{t.organization}}</td>

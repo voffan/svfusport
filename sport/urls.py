@@ -11,6 +11,8 @@ urlpatterns = [
     path('table/', views.table_view, name="table-view"),
 
     path('create/', views.form_create_view, name="form-create-view"),
+
     path('teamtable/', views.teamtable, name="teamtable"),
-    path('change/>', views.change_link, name="change-link"),
+    path('change/<int:id>/chan/', views.form_change_view, name="form-change-view"),
+    #path('change/<int:id>/chan/', views.changelink, name="change-link"),
 ]
