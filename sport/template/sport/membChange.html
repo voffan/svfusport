@@ -1,0 +1,16 @@
+{% extends 'sport/index.html' %}
+{% block form_change_member %}
+<h1>Редактировать спортсмена</h1>
+<div class="col-sm">
+
+    <form method="POST" action="">{% csrf_token %}
+     {{ form }}
+        <input type="submit" value="Сохранить" />
+
+        <a href="http://localhost:8000/CM/teamtable/">
+         <input type="button" value="Таблица заявок">
+        </a>
+    </form>
+
+</div>
+{% endblock %}

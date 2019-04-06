@@ -1,0 +1,112 @@
+{% extends "sport/index.html" %}
+{% block form_add %}
+
+
+<!--<button type="button" class="btn-sm btn-info">Оформить заявку</button>-->
+
+<div class="col-sm">
+
+    <form method="POST" action="" id="form_create_view_form">{% csrf_token %}
+
+        <div class="form-group row">
+            <label for="sport" class="col-sm-1 col-form-label">Соревнование</label>
+            <div class="col-sm-6">
+                {{ form.competition }}
+                <!--<input type="text" id="sport" class="form-control" aria-describedby="sportHelp" placeholder="Введите вид спорта" name="sport">-->
+                <small id="sportHelp" class="form-text text-muted">этоподсказка</small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="organzation" class="col-sm-1 col-form-label">Организация</label>
+            <div class="col-sm-6">
+                {{ form.organization }}
+                <!--<input type="text" id="organzation" class="form-control" aria-describedby="orgHelp" placeholder="Введите организацию" name="org">-->
+                <small id="orgtHelp" class="form-text text-muted">этоподсказка</small>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="team" class="col-sm-1 col-form-label">Команда</label>
+            <div class="col-sm-6">
+                {{form.name }}
+                <!--<input type="text" id="team" class="form-control" aria-describedby="teamHelp" placeholder="Введите название комманды" name="team">-->
+                <small id="teamtHelp" class="form-text text-muted">этоподсказка</small>
+            </div><a href=""><i class="fas fa-plus fa-lg" data-fa-transform="shrink-8" data-toggle="tooltip" data-placement="down" title="Добавить спортсменов"></i></a>
+        </div>
+
+         <div class="form-group row">
+            <label for="team" class="col-sm-1 col-form-label">Участники команд</label>
+            <div class="col-sm-6">
+                {{form.teamMembers }}
+                <!--<input type="text" id="team" class="form-control" aria-describedby="teamHelp" placeholder="Введите название комманды" name="team">-->
+                <small id="teamtHelp" class="form-text text-muted">этоподсказка</small>
+            </div><a href=""><i class="fas fa-plus fa-lg" data-fa-transform="shrink-8" data-toggle="tooltip" data-placement="down" title="Добавить спортсменов"></i></a>
+        </div>
+
+        <div class="form-check">
+            {{ form.not_resultable }}
+            <!--<input type="radio" id="zach1" name="zach" class="form-check-input" value="В зачете" checked>-->
+            <label for="zach1" class="form-check-label">В зачете</label>
+        </div>
+
+        <input type="submit" value="Сохранить" />
+
+        <a href="http://localhost:8000/CM/teamtable/">
+         <input type="button" value="Таблица заявок">
+        </a>
+
+        <a href="http://localhost:8000/CM/tmembertable/" >
+         <input type="button" value="Общий список спортсменов">
+        </a>
+            <button id="registre">CHeck registre team</button>
+    </form>
+
+</div>
+
+<div class="container" id="divTable">
+            <table class="table table-hover table-bordered table-sm table-justified" id="table">
+                <thead class="active thead-light">
+
+                        <th class="table-warning" style="width: 4%">№</th>
+                        <th style="width: 20%">Команда</th>
+                        <th style="width: 20%">Участники</th>
+                        <th style="width: 20%">Комментарии</th>
+                        <th style="width: 3%">Управление</th>
+
+                </thead>
+                <tbody>
+
+                    <!--{% for t in teamMember %}-->
+
+                    <tr id="tr_data">
+
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <div class="dropdown">
+                                    <a class="btn btn-light dropdown-toggle-none" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Операции
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="/CM/membercreate/">Добавить спортсмена</a>
+                                        <a class="dropdown-item" onclick="location.href='/CM/tmembertable/{{t.id}}/membChange/'">Редактировать спортсмена</a>
+                                        <a class="dropdown-item" onclick="location.href='/CM/tmembertable/{{t.id}}/membremove/'">Удалить спортсмена</a>
+                                  </div>
+                                </div>
+                            </td>
+                    </tr>
+                    <!--{% endfor %}-->
+                </tbody>
+            </table>
+
+
+<div id="result"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% load static %}
+<script type="text/javascript" src="{% static 'my_js/fill_table.js' %}"></script>
+{% endblock %}

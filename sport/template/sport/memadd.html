@@ -1,0 +1,27 @@
+{% extends 'sport/index.html' %}
+{% block form_change_member %}
+
+{% block css %} {{ form.media.css }}{% endblock %}
+
+{% block js %} {{ form.media.js }} {% endblock %}
+<style type="text/css">
+    select {
+      width: 300px;
+    }
+</style>
+<h1>Добавить в команду</h1>
+<div class="col-sm">
+
+    <form method="POST" action="">{% csrf_token %}
+     {{ form.as_p }}
+        <input type="submit" value="Сохранить" />
+
+        <a href="http://localhost:8000/CM/teamtable/">
+         <input type="button" value="Таблица заявок">
+        </a>
+    </form>
+
+    </form>
+
+</div>
+{% endblock %}
