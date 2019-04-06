@@ -1,14 +1,44 @@
-{% extends "sport/index.html" %}
+{% extends 'sport/index.html' %}
 {% block form_change %}
+<h1>Изменить заявку</h1>
 <div class="col-sm">
 
     <form method="POST" action="">{% csrf_token %}
-     {{ form }}
-        <input type="submit" value="Сохранить" />
 
-        <a href="http://localhost:8000/CM/teamtable/">
-         <input type="button" value="Редактировать">
-        </a>
+         <div class="form-group row">
+            <label for="sport" class="col-sm-1 col-form-label">Соревнование</label>
+            <div class="col-sm-6">
+                {{ form.competition }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="organzation" class="col-sm-1 col-form-label">Организация</label>
+            <div class="col-sm-6">
+                {{ form.organization }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="team" class="col-sm-1 col-form-label">Команда</label>
+            <div class="col-sm-6">
+                {{form.name }}
+            </div>
+        </div>
+
+        <div class="form-check">
+            {{ form.not_resultable }}
+            <label for="zach1" class="form-check-label">В зачете</label>
+        </div>
+
+        <div>
+            <button type="submit" value="Сохранить" class="btn btn-success">Сохранить</button>
+            <a href="http://localhost:8000/CM/teamtable/" class="btn btn-success" value="Таблица заявок" role="button">Таблица заявок</a>
+        </div>
+
+        <div>
+
+        </div>
     </form>
 
 </div>
