@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from sport.models import Sport, Period, Team, Place, TeamResult, Compitition, Judge, Person, CompetitionJudge
+from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.template.context_processors import csrf
@@ -51,7 +51,7 @@ def table_view(request):
         today = datetime.datetime.now()
         period = Period.objects.get(begin__lte=today, end__gte=today)
     sports = Sport.objects.all()
-    results = TeamResult.objects.select_related('Team', 'Department', 'Compitition', 'Place').filter(compitition__date__gte=period.begin, compitition__date__lte=period.end)
+    results = TeamResult.objects.select_related('Team', 'Department', 'Competition', 'Place').filter(competition__date__gte=period.begin, competition__date__lte=period.end)
 
     context = {
         'sports': sports,
@@ -61,7 +61,7 @@ def table_view(request):
     return render(request, 'sport/competition.html', context)
 
 def competition(request):
-    competition = Compitition.objects.all()
+    competition = Competition.objects.all()
     json_collection=[]
     for i, item in enumerate(competition):
         json_collection.append({
@@ -78,7 +78,7 @@ def competition(request):
     if 'q' in request.GET.keys():
         args={}
         query = request.GET.get('q')
-        founded_values = Compitition.objects.filter(
+        founded_values = Competition.objects.filter(
             Q(sport__name__icontains = query)|
             Q(place__name__icontains = query)
         )
@@ -89,10 +89,10 @@ def competition(request):
 
 
 def competitionedit(request, competition_id):
-    competition = Compitition.objects.get(pk = competition_id)
-    judge = CompetitionJudge.objects.filter(compitition__id = competition_id).first()
+    competition = Competition.objects.get(pk = competition_id)
+    judge = CompetitionJudge.objects.filter(competition__id = competition_id).first()
     form_judge = modelformset_factory(CompetitionJudge, form = JudgeForm, can_delete=True, extra=10)
-    formset = form_judge(queryset=CompetitionJudge.objects.filter(compitition__id = competition_id))
+    formset = form_judge(queryset=CompetitionJudge.objects.filter(competition__id = competition_id))
     if request.method == 'POST':
         args={}
         form = CompetitionForm(request.POST, instance=competition)
@@ -105,7 +105,7 @@ def competitionedit(request, competition_id):
                     if formj.is_valid():
                         instances = formj.save(commit=False)
                         for instance in instances:
-                            instance.compitition = new_competition
+                            instance.competition = new_competition
                             instance.save()
                         for obj in formj.deleted_objects:
                             obj.delete()
@@ -114,7 +114,7 @@ def competitionedit(request, competition_id):
                     return  render(request, 'sport/competitiondEdit.html', args)
             return redirect("sport:competition")
         if request.POST['button']=='delete':
-            Compitition.objects.filter(id=competition_id).delete()
+            Competition.objects.filter(id=competition_id).delete()
             return redirect("sport:competition")
     return render(request, 'sport/competitiondEdit.html', {
         'form': CompetitionForm(instance = competition),
@@ -123,9 +123,9 @@ def competitionedit(request, competition_id):
 
 '''
 def competitionedit(request, competition_id):
-    competition = Compitition.objects.get(pk = competition_id)
+    competition = Competition.objects.get(pk = competition_id)
     judge = CompetitionJudge.objects.filter(compititi   on__id = competition_id).first()
-    form_judge = inlineformset_factory(Compitition, CompetitionJudge, fields=('judge','judge_position'))
+    form_judge = inlineformset_factory(Competition, CompetitionJudge, fields=('judge','judge_position'))
     if request.method == 'POST':
         form = CompetitionForm(request.POST, instance=competition)
         formset = form_judge(request.POST, instance = competition)
@@ -134,14 +134,14 @@ def competitionedit(request, competition_id):
             if form.is_valid():
                 try:
                     form.save()
-                    formset.instance.compitition = form.instance
+                    formset.instance.competition = form.instance
                     formset.save()
                 except Exception as e:
                     args['save_error']=str(e)
                     return  render(request, 'sport/competitiondEdit.html', args)
             return redirect("sport:competition")
         if request.POST['button']=='delete':
-            Compitition.objects.filter(id=competition_id).delete()
+            Competition.objects.filter(id=competition_id).delete()
             return redirect("sport:competition")
     formset = form_judge(instance = competition)
     return render(request, 'sport/competitiondEdit.html', {
@@ -165,7 +165,7 @@ def competitioncreate(request):
                 if formj.is_valid():
                     instances = formj.save(commit=False)
                     for instance in instances:
-                        instance.compitition = new_competition
+                        instance.competition = new_competition
                         instance.save()
                     for obj in formj.deleted_objects:
                         obj.delete()
@@ -178,3 +178,178 @@ def competitioncreate(request):
         'formset': formset,
         'create': 'create'
         })
+
+
+
+
+'''функции изменения - удаления - добавления Team'''
+def form_change_view(request, id):
+    team = get_object_or_404(Team, id=id)
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            team.competition = form.cleaned_data['competition']
+            team.organization = form.cleaned_data['organization']
+            team.name = form.cleaned_data['name']
+            team.not_resultable = form.cleaned_data['not_resultable']
+            team.save()
+        return HttpResponseRedirect('/CM/teamtable/') #HttpResponse("good")
+    else:
+        form = TeamForm()
+    return render(request, 'sport/change.html', {'form': TeamForm()})
+
+
+''' создать заявку'''
+'''
+def form_create_view(request):
+if request.method == 'POST':
+    form = TeamForm(request.POST)
+    if form.is_valid():
+        try:
+            team = form.save()
+            for member_id in form.cleaned_data['TeamMembers']:
+                tm = TeamMember()
+                tm.team = team
+                tm.sportsman = Person.objects.get(pk=member_id)
+                tm.save()
+        except:
+            return HttpResponse('Error')
+    return HttpResponseRedirect('/CM/teamtable/') #redirect(reverse('sport:table_input'))
+return render(request, 'sport/teamadding.html', {'form': TeamForm()})
+'''
+
+
+''' удалить команду из заявки'''
+def team_remove_view(request, id):
+    try:
+        team = Team.objects.get(id = id)
+    except team.DoesNotExist:
+        team = None
+    team.delete()
+
+    return HttpResponseRedirect('/CM/teamtable/')
+
+
+''' Посмотреть участников команды'''
+
+def team_member(request):
+    teamMember = TeamMember.objects.all()
+    pe = Person.objects.all()
+
+    context={
+        'teamMember': teamMember,
+        'pe': pe
+    }
+    return render(request, 'sport/tmembertable.html', context)
+
+
+'''Добавить спортсмена'''
+def member_create_view(request):
+    if request.method == 'POST':
+        form = TeamMember_Form(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except:
+                return HttpResponse('Error')
+        return HttpResponseRedirect('/CM/tmembertable/')
+    return render(request, 'sport/memadd.html', {'form': TeamMember_Form()})
+
+
+''' удалить спортсмена из списка-команд'''
+def member_remove_view(request, id):
+    try:
+        team = TeamMember.objects.get(id = id)
+    except team.DoesNotExist:
+        team = None
+    team.delete()
+
+    return HttpResponseRedirect('/CM/tmembertable/')
+
+
+''' редактировать спортсмена'''
+def member_change_view(request, id):
+    sportsman = TeamMember.objects.get(pk = id)
+    teamMemb = get_object_or_404(TeamMember, id=id)
+    if request.method == 'POST':
+        form = TeamMember_Form(request.POST)
+        if form.is_valid():
+            teamMemb.team = form.cleaned_data['team']
+            teamMemb.sportsman = form.cleaned_data['sportsman']
+            teamMemb.comments = form.cleaned_data['comments']
+
+            teamMemb.save()
+        return HttpResponseRedirect('/CM/tmembertable/') #HttpResponse("good")
+    else:
+        form = TeamMember_Form()
+    return render(request, 'sport/membChange.html', {'form': TeamMember_Form(instance = sportsman)})
+
+'''
+def team_member(request):
+result={"success":True}
+
+return HttpResponse(json.dumps(result), content_type='application/json')
+'''
+'''
+def team_member(request):
+teamMember = list(TeamMember.objects.all().values())
+data = dict()
+data['teamMember'] = teamMember
+
+return JsonResponse(data)
+'''
+
+def form_create_view(request):
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            try:
+                team = form.save()
+            except:
+                return HttpResponse('Error')
+        return HttpResponseRedirect('/CM/teamtable/') #redirect(reverse('sport:table_input'))
+    return render(request, 'sport/teamadding.html', {'form': TeamForm()})
+
+
+# декоратор POST - 1 это обеспечение POST запросов
+# декоратор Ajax_require - 2 для совмещения работы Django с Ajax(чтобыне дать Ajax свободы действий)
+
+#def ajax_required(f):
+"""
+AJAX request required decorator
+use it in your views:
+
+@ajax_required
+def my_view(request):
+   ....
+
+"""
+
+def wrap(request, *args, **kwargs):
+   if not request.is_ajax():
+       return HttpResponseBadRequest()
+   return f(request, *args, **kwargs)
+
+    #wrap.__doc__=f.__doc__
+    #wrap.__name__=f.__name__
+    #return wrap
+
+#@ajax_required
+#@csrf_exempt
+def member_team(request):
+    if request.method == 'POST':
+        answer = dict(teams=[])
+        if request.is_ajax():
+            team = request.POST.get('team')
+            qs = Team.objects.filter(name__contains=team) if team else Team.objects.all()
+            for obj in qs:
+                members = [{'id': tm.id, 'name': str(tm.sportsman), 'comm': tm.comments} for tm in obj.teammember_set.all()]
+                answer['teams'].append({
+                    'id': obj.id,
+                    'name': obj.name,
+                    'members': members,
+
+                })
+        return JsonResponse(answer)
+
+    return JsonResponse('team_aj') # возврат данных в Ajax
