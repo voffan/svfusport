@@ -1,0 +1,17 @@
+<div class="container">
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand" href="/">Спартакиада СВФУ</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#my-nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="my-nav" class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+        <li class="nav-item acive"> <a href="/auth/logout" style="color: white; text-decoration: none;">Выйти ({{ user.username }})</a> </li>
+        {% else %}
+        <li> <a href="/auth/login" style="color: white; text-decoration: none;">Войти</a> </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+</div>

@@ -69,7 +69,7 @@ class Team(models.Model):
 class Jrebiy(models.Model):
     sport = models.ForeignKey(Sport, verbose_name = "Вид Спорта", db_index = True, on_delete = models.CASCADE)
     team = models.ForeignKey(Team, verbose_name = "Команда", db_index = True, on_delete = models.CASCADE)
-    
+
     def vibor(self, team):
         if(team.competition == 1):
 '''
@@ -79,9 +79,10 @@ class Compitition(models.Model):
     date = models.DateField(verbose_name = "Дата соревнования", default=datetime.date.today())
     place = models.ForeignKey(Place, verbose_name = "Место проведения", null = True, blank = True, on_delete = models.CASCADE)
     sport = models.ForeignKey(Sport, verbose_name = "Вид Спорта", db_index = True, on_delete = models.CASCADE)
+    #comment = models.CharField(max_length=500, verbose_name= "Коментарий", default="")
 
     def __str__(self):
-        return self.place.name + ' : ' + self.place.address
+        return self.place.name + ' : ' + self.place.address + ' : ' +self.sport.name
 
 
 '''class ResultTable(models.Model):
@@ -114,7 +115,7 @@ class Position(models.Model):
 
 class Person(models.Model):
     fio = models.CharField(max_length=300, verbose_name="ФИО", db_index=True)
-    position = models.ForeignKey(Position, verbose_name='Должность', on_delete=models.CASCADE)
+    position = models.ForeignKey(Position, default=None, verbose_name='Должность', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.fio
@@ -138,9 +139,8 @@ class SportsmanResult(models.Model):
     def __str__(self):
         return self.sportsman.name + ' ' + str(self.place)
 
-
+#вопросики
 class Organizator(Person):
-
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -148,15 +148,14 @@ class Organizator(Person):
 
 
 class Judge(Person):
-    judge_position = models.CharField(max_length=20, choices=JudesType, verbose_name="Класс судьи", blank=False)
-    compitition = models.ForeignKey(Compitition, verbose_name="Соревнование", db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
-
-    def __init__(self):
-        super(Judge, self).__init__()
 
     def __str__(self):
         return self.fio
 
-'''База Данных'''
+class CompetitionJudge(models.Model):
+    judge = models.ForeignKey(Judge, verbose_name='Судья', on_delete=models.CASCADE)
+    judge_position = models.CharField(max_length=20, choices=JudesType, verbose_name="Класс судьи", blank=False)
+    compitition = models.ForeignKey(Compitition, verbose_name="Соревнование", null=True, db_index=True, on_delete=models.CASCADE)
 
+'''База Данных'''

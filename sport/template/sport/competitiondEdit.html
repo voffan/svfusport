@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Спартакиада СВФУ</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <!--<script type="text/javascript" src="{% static 'my_js/js_table.js' %}"></script>-->
+
+
+</head>
+<body style=" background: rgb(51,122,183);">
+  {% with counter=0 %}
+  {% include 'sport/navbar.html' %}
+  <div class="container">
+    {% block edit %}
+    <div class="container bg-light">
+      <div class="row">
+        <div class="container">
+          {% if not save_error %}
+          <form action="" method="post">
+            {% csrf_token %}
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-9" style=" height: 91vh; overflow-y: scroll;">
+                    <div class="form-group" style="border: 2px solid grey; border-radius: 5px; padding: 10px; margin-top: 15px;" >
+                        <h5>Основные атрибуты соревнования</h5>
+                        {{ form.as_p }}
+                      </div>
+                        <div class="form-group" style="border: 2px solid grey; border-radius: 5px; padding: 10px;" >
+                          <h5>Судьи</h5>
+
+                                {{ formset.management_form }}
+                                {% for form in formset %}
+                                <!--<h6>Судья №{{ formset.count }}</h6>-->
+                                <div class="form-group {{ form.instance.id }} {{ form.instance.id}}-{{ forloop.counter }}" style="border: 2px solid grey; border-radius: 5px; padding: 10px;">
+                                  {{ form.as_table}}
+                                </div>
+                                <p class="kostyl" id="kostyl" style="display:none;">{{forloop.counter}}</p>
+                                {% endfor %}
+                                <button type="button" name="button" class="btn btn-block btn-primary" onclick="showform()">Добавить судью</button>
+                        </div>
+                        <!--{{ form_person.as_p }}-->
+                  </div>
+                  <div class="col-3" style=" height: 91vh;">
+                    <div class="form-group">
+                      <button type="submit" name="button" value="save" class="btn btn-block btn-dark" style="margin-top: 15px;">Сохранить</button>
+                      {% if not create %}
+                      <button type="submit" name="button" value="copy" class="btn btn-block btn-dark" style="margin-top: 15px;">Копировать</button>
+                      <button type="submit" name="button" value="delete" class="btn btn-block btn-dark" style="margin-top: 15px;">Удалить</button>
+                      {% endif %}
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+          </form>
+          {% endif %}
+          {% if save_error %}
+          <label class="error" style="color: red;">{{ save_error }}</label>
+          {% endif %}
+        </div>
+      </div>
+      </div>
+    {% endblock %}
+  </div>
+
+<script>
+/*
+$(document).ready(function(){
+  $("#None").each(function() {
+    console.log($(this).innerHTML);
+    $(this).hide()
+  });
+});*/
+
+//for(i=0;)
+  var a=0;
+  var b=$(".kostyl").map(function() {return ($(this)).html()}).last()[0];
+  b=parseInt(b);
+  a=b;
+  $(".None").hide();
+  function showform(){
+    $(".None-"+a).show()
+    a--;
+  }
+</script>
+{% endwith %}
+</body>

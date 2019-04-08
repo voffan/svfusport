@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sport'
+    'sport',
+    'syslogin'
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,9 @@ ROOT_URLCONF = 'svfusport.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'sport/template')],
+        'DIRS': [os.path.join(BASE_DIR, 'sport/template'),
+                 os.path.join(BASE_DIR, 'templates'),
+                 os.path.join(BASE_DIR, 'syslogin/template'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,6 +117,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATE_FORMAT = 'Y.m.d'
+
+TIME_FORMAT = 'H:i'
+
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -125,7 +133,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static0'),
 )
-
-
