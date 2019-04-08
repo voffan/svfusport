@@ -102,7 +102,11 @@ ENV/
 venv_e
 .idea
 <<<<<<< HEAD
+<<<<<<< HEAD
 db.sqlite3
 =======
 sport/migrations
 >>>>>>> 61995f148e071c5a0f5da67bbb60f37ebce66da3
+=======
+sport/migrations
+>>>>>>> fa18bc56e09095d29e7a131fdba7c4a99aa50a05
