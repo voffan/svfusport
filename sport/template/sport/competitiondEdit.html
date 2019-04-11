@@ -30,18 +30,21 @@
                         <h5>Основные атрибуты соревнования</h5>
                         {{ form.as_p }}
                       </div>
-                        <div class="form-group" style="border: 2px solid grey; border-radius: 5px; padding: 10px;" >
+                        <div class="form-group" id="judge_div" style="border: 2px solid grey; border-radius: 5px; padding: 10px;" >
                           <h5>Судьи</h5>
 
                                 {{ formset.management_form }}
                                 {% for form in formset %}
                                 <!--<h6>Судья №{{ formset.count }}</h6>-->
-                                <div class="form-group {{ form.instance.id }} {{ form.instance.id}}-{{ forloop.counter }}" style="border: 2px solid grey; border-radius: 5px; padding: 10px;">
+                                <div class="form-group count {{ form.instance.id }}" id="forclone" style="border: 2px solid grey; border-radius: 5px; padding: 10px;">
                                   {{ form.as_table}}
                                 </div>
-                                <p class="kostyl" id="kostyl" style="display:none;">{{forloop.counter}}</p>
+                                <!--p class="kostyl" id="kostyl" style="display:none;">{{forloop.counter}}</p>-->
                                 {% endfor %}
-                                <button type="button" name="button" class="btn btn-block btn-primary" onclick="showform()">Добавить судью</button>
+
+                        </div>
+                        <div class="">
+                          <button type="button" name="button" class="btn btn-block btn-primary" onclick="showform()">Добавить судью</button>
                         </div>
                         <!--{{ form_person.as_p }}-->
                   </div>
@@ -79,6 +82,7 @@ $(document).ready(function(){
 });*/
 
 //for(i=0;)
+/*
   var a=0;
   var b=$(".kostyl").map(function() {return ($(this)).html()}).last()[0];
   b=parseInt(b);
@@ -87,6 +91,30 @@ $(document).ready(function(){
   function showform(){
     $(".None-"+a).show()
     a--;
+  }*/
+  //$(".None").hide();
+  i = $("#id_form-TOTAL_FORMS").attr("value");
+  j = $("#id_form-INITIAL_FORMS").attr("value");
+  console.log(i);
+  function showform(){
+    var data = $("#forclone").clone().appendTo("#judge_div");
+    data.find("label").eq(0).attr("for","id_form-" + i + "-judge");
+    data.find("label").eq(1).attr("for","id_form-" + i + "-judge_position");
+    data.find("label").eq(2).attr("for","id_form-" + i + "-DELETE");
+    data.find("select").eq(0).attr("name","form-" + i + "-judge");
+    data.find("select").eq(0).attr("id","id_form-" + i + "-judge");
+    data.find("select").eq(1).attr("name","form-" + i + "-judge_position");
+    data.find("select").eq(1).attr("id","id_form-" + i + "-judge_position");
+    data.find("input").eq(1).attr("value","");
+    //data.find("input[id=id_form-"+ i +"-id]").attr("value","");
+    data.find("input").eq(0).attr("name","form-" + i + "-DELETE");
+    data.find("input").eq(1).attr("name","form-" + i + "-id");
+    data.find("input").eq(0).attr("id","id_form-" + i + "-DELETE");
+    data.find("input").eq(1).attr("id","id_form-" + i + "-id");
+    i++;
+    j++;
+    $("#id_form-TOTAL_FORMS").attr("value", i);
+    //$("#id_form-INITIAL_FORMS").attr("value", j);
   }
 </script>
 {% endwith %}

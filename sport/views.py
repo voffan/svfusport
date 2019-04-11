@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge
+from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge, TeamMember
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.template.context_processors import csrf
@@ -91,7 +91,7 @@ def competition(request):
 def competitionedit(request, competition_id):
     competition = Competition.objects.get(pk = competition_id)
     judge = CompetitionJudge.objects.filter(competition__id = competition_id).first()
-    form_judge = modelformset_factory(CompetitionJudge, form = JudgeForm, can_delete=True, extra=10)
+    form_judge = modelformset_factory(CompetitionJudge, form = JudgeForm, can_delete=True, extra=0)
     formset = form_judge(queryset=CompetitionJudge.objects.filter(competition__id = competition_id))
     if request.method == 'POST':
         args={}
@@ -104,11 +104,15 @@ def competitionedit(request, competition_id):
                     formj = form_judge(request.POST)
                     if formj.is_valid():
                         instances = formj.save(commit=False)
+                        print(instances)
                         for instance in instances:
                             instance.competition = new_competition
                             instance.save()
                         for obj in formj.deleted_objects:
                             obj.delete()
+                    else:
+                        print(formj.errors)
+                        return HttpResponse("lol")
                 except Exception as e:
                     args['save_error']=str(e)
                     return  render(request, 'sport/competitiondEdit.html', args)
