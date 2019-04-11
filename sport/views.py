@@ -8,6 +8,7 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 
 from .forms import TeamForm, TeamMember_Form
+from django.forms import modelformset_factory
 #from django.contrib.formtools.wizard.views import SessionWizardView
 
 import json
@@ -54,7 +55,7 @@ def table_view(request):
     return render(request, 'sport/competition.html', context)
 
 
-'''функции изменения - удаления - добавления Team'''
+'''функции изменения Team'''
 def form_change_view(request, id):
     team = get_object_or_404(Team, id=id)
     if request.method == 'POST':
@@ -103,29 +104,25 @@ def team_remove_view(request, id):
 
 
 ''' Посмотреть участников команды'''
-
 def team_member(request):
     teamMember = TeamMember.objects.all()
-    pe = Person.objects.all()
-
     context={
         'teamMember': teamMember,
-        'pe': pe
     }
     return render(request, 'sport/tmembertable.html', context)
 
 
 '''Добавить спортсмена'''
-def member_create_view(request):
-    if request.method == 'POST':
-        form = TeamMember_Form(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-            except:
-                return HttpResponse('Error')
-        return HttpResponseRedirect('/CM/tmembertable/')
-    return render(request, 'sport/memadd.html', {'form': TeamMember_Form()})
+# def member_create_view(request):
+#     if request.method == 'POST':
+#         form = TeamMember_Form(request.POST)
+#         if form.is_valid():
+#             try:
+#                 form.save()
+#             except:
+#                 return HttpResponse('Error')
+#         return HttpResponseRedirect('/CM/tmembertable/')
+#     return render(request, 'sport/memadd.html', {'form': TeamMember_Form()})
 
 
 ''' удалить спортсмена из списка-команд'''
@@ -156,34 +153,63 @@ def member_change_view(request, id):
         form = TeamMember_Form()
     return render(request, 'sport/membChange.html', {'form': TeamMember_Form(instance = sportsman)})
 
-'''
-def team_member(request):
-    result={"success":True}
 
-    return HttpResponse(json.dumps(result), content_type='application/json')
-'''
-'''
-def team_member(request):
-    teamMember = list(TeamMember.objects.all().values())
-    data = dict()
-    data['teamMember'] = teamMember
+'''Добавить спортсмена'''
+def member_create_view(request):
+    context = {}
+    #team = TeamMember.objects.get(pk = id)
+    #Smemberteam = TeamMember.objects.filter(team_id = id).first()
+    form1 = TeamMember_Form(request.POST)
+    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete=True, extra=3)
+    formset = form_member(queryset = TeamMember.objects.none())
+    if request.method == 'POST':
+        formset = form_member(request.POST)
+        if form1.is_valid() and formset.is_valid():
+            try:
+                member = form1.save(commit = False)
+                member.save()
 
-    return JsonResponse(data)
-'''
+                for memb in formset:
+                    data = memb.save(commit=False)
+                    data.member = member
+                    data.save()
+                # new_team = form1.save()
+                # form1.save()
+                # form_m = form_member(request.POST)
+                # if form_m.is_valid():
+                #     instances = form_m.save(commit=False)
+                #     for instance in instances:
+                #         instance.team = new_team
+                #         instance.save()
+            except:
+                return HttpResponse('Error')
+            return HttpResponseRedirect('/CM/tmembertable/') # redirect(reverse('sport:table_input'))
+    context['form1'] = form1
+    context['formset'] = formset
 
+
+    return render(request, 'sport/teamadding.html', context)
+
+
+''' создать заявку'''
 def form_create_view(request):
-
+    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True, extra = 3)
+    formset = form_member(queryset = TeamMember.objects.none())
     if request.method == 'POST':
         form = TeamForm(request.POST)
-        if form.is_valid():
-
+        formset = form_member(request.POST)
+        if form.is_valid() and formset.is_valid():
             try:
-                team = form.save()
+                team=form.save()
+                objects = formset.save(commit = False)
+                for mem in objects:
+                    mem.team = team
+                    mem.save()
 
             except:
                 return HttpResponse('Error')
         return HttpResponseRedirect('/CM/teamtable/') #redirect(reverse('sport:table_input'))
-    return render(request, 'sport/teamadding.html', {'form': TeamForm()})
+    return render(request, 'sport/teamadding.html', {'form': TeamForm(),'formset': formset})
 
 
 # декоратор POST - 1 это обеспечение POST запросов
@@ -215,13 +241,12 @@ def member_team(request):
         answer = dict(teams=[])
         if request.is_ajax():
             team = request.POST.get('team')
-            qs = Team.objects.filter(name__contains=team) if team else Team.objects.all()
-            for obj in qs:
-                members = [{'id': tm.id, 'name': str(tm.sportsman), 'comm': tm.comments} for tm in obj.teammember_set.all()]
+            try:
+                qs = Team.objects.filter(name__iexact=team)
+
+            except IndentationError:
                 answer['teams'].append({
-                    'id': obj.id,
-                    'name': obj.name,
-                    'members': members,
+
 
                 })
         return JsonResponse(answer)

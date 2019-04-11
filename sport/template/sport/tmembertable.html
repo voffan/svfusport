@@ -29,7 +29,6 @@
 
                             <td>{{ forloop.counter }}</td>
                             <td>{{t.team}} </td>
-
                             <td>{{t.sportsman}} </td>
                             <td>{{t.comments}} </td>
                             <td>
@@ -38,7 +37,7 @@
                                         Операции
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <a class="dropdown-item" href="/CM/membercreate/">Добавить спортсмена</a>
+                                        <a class="dropdown-item" href='/CM/memPersAdd/'>Добавить спортсмена</a>
                                         <a class="dropdown-item" onclick="location.href='/CM/tmembertable/{{t.id}}/membChange/'">Редактировать спортсмена</a>
                                         <a class="dropdown-item" onclick="location.href='/CM/tmembertable/{{t.id}}/membremove/'">Удалить спортсмена</a>
                                   </div>

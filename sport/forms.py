@@ -48,7 +48,7 @@ class TeamForm(forms.ModelForm):
 
 
 class TeamMember_Form(forms.ModelForm):
-    team = forms.ModelChoiceField(queryset = Team.objects.all(), empty_label = 'Выберите команду')
+    #team = forms.ModelChoiceField(queryset = Team.objects.all(), empty_label = 'Выберите команду')
 
     sportsman = forms.ModelChoiceField(queryset = Person.objects.all(), empty_label = 'Выберете спортсмена')
 
@@ -57,10 +57,10 @@ class TeamMember_Form(forms.ModelForm):
     class Meta:
         model = TeamMember
         fields = [
-            'team',
             'sportsman',
             'comments'
         ]
+
 
 
 ''' добавление Персон в команду '''
