@@ -1,5 +1,5 @@
 from django import forms
-from .models import Team, Sport, Department, Competition, Person, TeamMember, Position
+from .models import Team, Sport, Department, Competition, Person, TeamMember, Position, CompetitionJudge
 #from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, Select2Widget
 import datetime
 
@@ -33,9 +33,42 @@ class TeamForm(forms.ModelForm):
             'competition',
             'organization',
             'name',
-            'not_resultable',
-
+            'not_resultable'
         ]
+
+
+class ChangeTeamForm(TeamForm):
+    pass
+
+
+class CompetitionForm(forms.ModelForm):
+    class Meta:
+        model = Competition
+        fields = [
+            'date',
+            'place',
+            'sport'
+        ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date'].widget.attrs.update({'type': 'date', 'class': 'form-control kostyl', 'id':"date", 'name':"date", 'placeholder':"Дата"})
+        self.fields['place'].widget.attrs.update({'class': 'form-control'})
+        self.fields['sport'].widget.attrs.update({'class': 'form-control'})
+
+class JudgeForm(forms.ModelForm):
+
+    class Meta():
+        model = CompetitionJudge
+        fields =[
+            'judge',
+            'judge_position',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['judge'].widget.attrs.update({'class': 'form-control'})
+        self.fields['judge_position'].widget.attrs.update({'class': 'form-control'})
+        #self.fields['DELETE'].widget.attrs.update({'class': 'form-check-input'})
 
 
 #
@@ -44,7 +77,7 @@ class TeamForm(forms.ModelForm):
 #     queryset=Person.objects.all()
 #     search_fields = ['fio__contains']
 
-'''Форма добавления спортсмена '''
+#Форма добавления спортсмена
 
 
 class TeamMember_Form(forms.ModelForm):
@@ -62,9 +95,7 @@ class TeamMember_Form(forms.ModelForm):
         ]
 
 
-
-''' добавление Персон в команду '''
-
+#добавление Персон в команду
 
 # class Person_Form(forms.Form):
 #     fio = forms.ModelMultipleChoiceField(queryset = Person.objects.all(),
@@ -77,5 +108,5 @@ class TeamMember_Form(forms.ModelForm):
 #         model = Person
 #         fields = [
 #             'fio',
-#             'position',
+#             'position'
 #         ]

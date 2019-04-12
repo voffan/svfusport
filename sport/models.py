@@ -54,11 +54,22 @@ class Department(models.Model):
     def __str__(self):
         return self.name
 
+
+class Team(models.Model):
+    competition = models.ForeignKey(Sport, verbose_name="Вид Спорта", db_index=True, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Department, verbose_name="Организация", db_index=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, verbose_name= "Название команды", db_index=True)
+    not_resultable = models.BooleanField(verbose_name='Вне зачета', default=False)
+
+    def __str__(self):
+        return self.organization.name + ' : команда -- : ' + self.name
+
+
 '''
 class Jrebiy(models.Model):
     sport = models.ForeignKey(Sport, verbose_name = "Вид Спорта", db_index = True, on_delete = models.CASCADE)
     team = models.ForeignKey(Team, verbose_name = "Команда", db_index = True, on_delete = models.CASCADE)
-    
+
     def vibor(self, team):
         if(team.competition == 1):
 '''
@@ -76,7 +87,7 @@ class Competition(models.Model):
 class Team(models.Model):
     competition = models.ForeignKey(Competition, verbose_name="Соревнование", db_index=True, on_delete=models.CASCADE)
     organization = models.ForeignKey(Department, verbose_name="Организация", db_index=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, verbose_name= "Название команды", db_index = True)
+    name = models.CharField(max_length=100, verbose_name= "Название команды", db_index=True)
     not_resultable = models.BooleanField(verbose_name='Вне зачета', default=False)
 
     def __str__(self):
@@ -87,7 +98,7 @@ class Team(models.Model):
     points = models.IntegerField(verbose_name="Очки", db_index=True)
     result = models.PositiveIntegerField(verbose_name= "Место", db_index=True)
     department = models.ForeignKey(Department, verbose_name="Организация", db_index=True)
-    compitition = models.ForeignKey(Compitition, verbose_name="Соревнование", db_index=True)
+    compitition = models.ForeignKey(Competition, verbose_name="Соревнование", db_index=True)
     team = models.ForeignKey(Team, verbose_name = "Команда", db_index=True)
 
     def __str__(self):
@@ -98,7 +109,7 @@ class TeamResult(models.Model):
     points = models.PositiveIntegerField(verbose_name = "Очки", null=True, blank=True)
     compitition = models.ForeignKey(Competition, verbose_name = "Соревнование", db_index = True, on_delete=models.CASCADE)
     result = models.PositiveIntegerField(verbose_name= "Место", null=True, blank=True)
-    team = models.ForeignKey(Team, verbose_name="Команда", db_index = True, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, verbose_name="Команда", db_index=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.team.organization.name
@@ -113,7 +124,7 @@ class Position(models.Model):
 
 class Person(models.Model):
     fio = models.CharField(max_length=300, verbose_name="ФИО", db_index=True)
-    position = models.ForeignKey(Position, verbose_name='Должность', on_delete=models.CASCADE)
+    position = models.ForeignKey(Position, default=None, verbose_name='Должность', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.fio
@@ -147,15 +158,14 @@ class Organizator(Person):
 
 
 class Judge(Person):
-    judge_position = models.CharField(max_length=20, choices=JudesType, verbose_name="Класс судьи", blank=False)
-    compitition = models.ForeignKey(Competition, verbose_name= "Соревнование", db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
-
-    def __init__(self):
-        super(Judge, self).__init__()
 
     def __str__(self):
         return self.fio
 
-'''База Данных'''
+class CompetitionJudge(models.Model):
+    judge = models.ForeignKey(Judge, verbose_name='Судья', on_delete=models.CASCADE)
+    judge_position = models.CharField(max_length=20, choices=JudesType, verbose_name="Класс судьи", blank=False)
+    competition = models.ForeignKey(Competition, verbose_name="Соревнование", null=True, db_index=True, on_delete=models.CASCADE)
 
+'''База Данных'''
