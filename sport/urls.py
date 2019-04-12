@@ -23,12 +23,9 @@ urlpatterns = [
     path('tmembertable/<int:id>/membChange/', views.member_change_view, name="member_change_view"),
     path('tmembertable/<int:id>/membremove/', views.member_remove_view, name="member_remove_view"),
     path('memPersAdd/', views.member_create_view, name="member_create_view"),
-    #path('sport/', views.sport_view, name="sport-view"),
-    #path('table/', views.table_view, name="table-view"),
+
     path('competition/', views.competition, name="competition"),
-    #path('table2/', TemplateView.as_view(template_name="sport/competition.html", extra_context={"name": Place.name})),
     path('competitionedit/<int:competition_id>',views.competitionedit, name="competitionedit"),
     path('competitioncreate', views.competitioncreate, name="competitioncreate"),
-    #path('team_member_process', views.team_member, name='team_member'),
-    #path('change/<int:id>/chan/', views.changelink, name="change-link"),
+
 ]
