@@ -107,7 +107,7 @@ class Team(models.Model):
 
 class TeamResult(models.Model):
     points = models.PositiveIntegerField(verbose_name = "Очки", null=True, blank=True)
-    compitition = models.ForeignKey(Competition, verbose_name = "Соревнование", db_index = True, on_delete=models.CASCADE)
+    competition = models.ForeignKey(Competition, verbose_name = "Соревнование", db_index = True, on_delete=models.CASCADE)
     result = models.PositiveIntegerField(verbose_name= "Место", null=True, blank=True)
     team = models.ForeignKey(Team, verbose_name="Команда", db_index=True, on_delete=models.CASCADE)
 
@@ -140,7 +140,7 @@ class TeamMember(models.Model):
 
 
 class SportsmanResult(models.Model):
-    compitition = models.ForeignKey(Competition, verbose_name= "Вид Спорта", db_index=True, on_delete=models.CASCADE)
+    competition = models.ForeignKey(Competition, verbose_name= "Вид Спорта", db_index=True, on_delete=models.CASCADE)
     place = models.IntegerField(verbose_name="Место")
     points = models.DecimalField(verbose_name="Очки", max_length=100, max_digits=7, decimal_places=2)
     sportsman = models.OneToOneField(TeamMember, verbose_name="Спортсмен", db_index=True, on_delete=models.CASCADE)
