@@ -2,13 +2,13 @@ import datetime
 from django.template.context_processors import csrf
 from django.db.models import Q
 from django.contrib import auth
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
 from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge, TeamMember
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.template.context_processors import csrf
-from .forms import CompetitionForm, JudgeForm
+from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form
 from django.forms import modelformset_factory, inlineformset_factory, formset_factory
 from django import forms
 import json
@@ -27,21 +27,15 @@ def sport_view(request):
     }
     return render(request, 'sport/competition.html', context)
 
-'''
-def table_view(request):
-    team = Team.objects.all()
-    period = Period.objects.all()
-    place = Place.objects.all()
-    sports = Sport.objects.all()
 
-    context = {
-        'sports': sports,
-        'team': team,
-        'period': period,
-        'place': place
+''' показать все таблицу заявок'''
+def teamtable(request):
+    teams = Team.objects.all()
+    context={
+        'teams': teams,
     }
-    return render(request, 'sport/competition.html', context)
-'''
+    return render(request, 'sport/teamtable.html', context)
+
 
 def table_view(request):
     team = Team.objects.all()
@@ -56,7 +50,7 @@ def table_view(request):
     context = {
         'sports': sports,
         'period': period,
-        'results':resultsr
+        'results':results
     }
     return render(request, 'sport/competition.html', context)
 
@@ -186,7 +180,7 @@ def competitioncreate(request):
 
 
 
-'''функции изменения - удаления - добавления Team'''
+'''функции изменения Team'''
 def form_change_view(request, id):
     team = get_object_or_404(Team, id=id)
     if request.method == 'POST':
@@ -235,29 +229,39 @@ def team_remove_view(request, id):
 
 
 ''' Посмотреть участников команды'''
-
 def team_member(request):
     teamMember = TeamMember.objects.all()
-    pe = Person.objects.all()
-
     context={
         'teamMember': teamMember,
-        'pe': pe
     }
     return render(request, 'sport/tmembertable.html', context)
 
 
 '''Добавить спортсмена'''
 def member_create_view(request):
+    context = {}
+    form1 = TeamMember_Form(request.POST)
+    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete=True, extra=3)
+    formset = form_member(queryset = TeamMember.objects.none())
     if request.method == 'POST':
-        form = TeamMember_Form(request.POST)
-        if form.is_valid():
+        formset = form_member(request.POST)
+        if form1.is_valid() and formset.is_valid():
             try:
-                form.save()
+                member = form1.save(commit = False)
+                member.save()
+
+                for memb in formset:
+                    data = memb.save(commit=False)
+                    data.member = member
+                    data.save()
             except:
                 return HttpResponse('Error')
-        return HttpResponseRedirect('/CM/tmembertable/')
-    return render(request, 'sport/memadd.html', {'form': TeamMember_Form()})
+            return HttpResponseRedirect('/CM/tmembertable/') # redirect(reverse('sport:table_input'))
+    context['form1'] = form1
+    context['formset'] = formset
+
+
+    return render(request, 'sport/teamadding.html', context)
 
 
 ''' удалить спортсмена из списка-команд'''
@@ -288,55 +292,43 @@ def member_change_view(request, id):
         form = TeamMember_Form()
     return render(request, 'sport/membChange.html', {'form': TeamMember_Form(instance = sportsman)})
 
-'''
-def team_member(request):
-result={"success":True}
 
-return HttpResponse(json.dumps(result), content_type='application/json')
-'''
-'''
-def team_member(request):
-teamMember = list(TeamMember.objects.all().values())
-data = dict()
-data['teamMember'] = teamMember
-
-return JsonResponse(data)
-'''
-
+''' создать заявку'''
 def form_create_view(request):
+    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True, extra = 3)
+    formset = form_member(queryset = TeamMember.objects.none())
     if request.method == 'POST':
         form = TeamForm(request.POST)
-        if form.is_valid():
+        formset = form_member(request.POST)
+        if form.is_valid() and formset.is_valid():
             try:
-                team = form.save()
+                team=form.save()
+                objects = formset.save(commit = False)
+                for mem in objects:
+                    mem.team = team
+                    mem.save()
+
             except:
                 return HttpResponse('Error')
         return HttpResponseRedirect('/CM/teamtable/') #redirect(reverse('sport:table_input'))
-    return render(request, 'sport/teamadding.html', {'form': TeamForm()})
+    return render(request, 'sport/teamadding.html', {'form': TeamForm(),'formset': formset})
+
 
 
 # декоратор POST - 1 это обеспечение POST запросов
 # декоратор Ajax_require - 2 для совмещения работы Django с Ajax(чтобыне дать Ajax свободы действий)
 
-#def ajax_required(f):
-"""
-AJAX request required decorator
-use it in your views:
+def ajax_required(f):
 
-@ajax_required
-def my_view(request):
-   ....
 
-"""
+    def wrap(request, *args, **kwargs):
+       if not request.is_ajax():
+           return HttpResponseBadRequest()
+       return f(request, *args, **kwargs)
 
-def wrap(request, *args, **kwargs):
-   if not request.is_ajax():
-       return HttpResponseBadRequest()
-   return f(request, *args, **kwargs)
-
-    #wrap.__doc__=f.__doc__
-    #wrap.__name__=f.__name__
-    #return wrap
+    wrap.__doc__=f.__doc__
+    wrap.__name__=f.__name__
+    return wrap
 
 #@ajax_required
 #@csrf_exempt
