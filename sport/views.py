@@ -1,6 +1,7 @@
 import datetime
 from django.template.context_processors import csrf
 from django.db.models import Q
+from django.db import IntegrityError
 from django.contrib import auth
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
@@ -336,16 +337,26 @@ def member_team(request):
     if request.method == 'POST':
         answer = dict(teams=[])
         if request.is_ajax():
-            team = request.POST.get('team')
-            qs = Team.objects.filter(name__contains=team) if team else Team.objects.all()
-            for obj in qs:
-                members = [{'id': tm.id, 'name': str(tm.sportsman), 'comm': tm.comments} for tm in obj.teammember_set.all()]
-                answer['teams'].append({
-                    'id': obj.id,
-                    'name': obj.name,
-                    'members': members,
 
-                })
+            if Team.objects.filter(name__contains=request.POST.get('team')):
+                answer['teams'].append('true')
+
+            else:
+                answer['teams'].append('false')
+            # print(type(team))
+            # print(type(qs))
+            # team = request.POST.get('team')
+            # qs = Team.objects.filter(name__contains='wolfes')
+            # for obj in qs:
+            #     members = [{'id': tm.id, 'name': str(tm.sportsman), 'comm': tm.comments} for tm in obj.teammember_set.all()]
+            #     answer['teams'].append({
+            #         'id': obj.id,
+            #         'name': obj.name,
+            #         'members': members,
+            #
+            #     })
+
+
         return JsonResponse(answer)
 
     return JsonResponse('team_aj') # возврат данных в Ajax
