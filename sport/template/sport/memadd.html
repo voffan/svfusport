@@ -1,18 +1,7 @@
-<style type="text/css">
-    select {
-      width: 300px;
-    }
-</style>
 <h1>Добавить в команду</h1>
 <div class="col-sm">
         {{ formset.management_form }}
         {% for f1 in formset %}
             {{ f1.as_p }}
         {% endfor %}
-
-        <input type="submit" value="Сохранить" />
-
-        <a href="http://localhost:8000/CM/tmembertable/">
-         <input type="button" value="Таблица заявок">
-        </a>
 </div>
