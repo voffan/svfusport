@@ -9,7 +9,7 @@ from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Ju
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.template.context_processors import csrf
-from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form
+from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form, TeamResult_form
 from django.forms import modelformset_factory, inlineformset_factory, formset_factory
 from django import forms
 import json
@@ -335,6 +335,39 @@ def member_create_view(request):
 
 
     return render(request, 'sport/teamadding.html', context)
+
+
+''' Результаты соревнования '''
+def result_team(request):
+    teamRes = TeamResult.objects.all()
+    context = {
+        'teamRes': teamRes,
+    }
+    return render(request, 'sport/ResultTeam.html', context)
+
+
+''' Задать результаты'''
+def create_result_team(request):
+    if request.method == 'POST':
+        form = TeamResult_form(request.POST)
+        if form.is_valid():
+
+                form.save()
+
+
+        return HttpResponseRedirect('/CM/teamresult')
+    return render(request, 'sport/createResult.html', {'form': TeamResult_form()})
+
+
+
+
+
+
+
+
+
+
+
 # декоратор POST - 1 это обеспечение POST запросов
 # декоратор Ajax_require - 2 для совмещения работы Django с Ajax(чтобыне дать Ajax свободы действий)
 

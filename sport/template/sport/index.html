@@ -33,7 +33,10 @@
       {% endblock %}
   </div>
 
-
+  <!--Посмотреть результаты  для User-->
+        <a href="{% url 'sport:teamresult' %}" class="btn btn-block btn-primary">Посмотреть результаты (User)</a>
+  <!--Посмотреть результаты  для Admin-->
+        <a href="{% url 'sport:teamResultCreate' %}" class="btn btn-block btn-primary">Вывести результаты (Admin)</a>
 
 
       {% block table_input %}{% endblock %}
