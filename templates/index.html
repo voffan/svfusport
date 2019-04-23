@@ -6,36 +6,17 @@
     <title>Спартакиада СВФУ</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style/style.css' %}">
     <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
     <!--<script type="text/javascript" src="{% static 'my_js/fill_table.js' %}"></script>-->
     <!--<script type="text/javascript" src="{% static 'my_js/js_table.js' %}"></script>-->
 
 </head>
   <header>
-  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <a class="navbar-brand" href="/">Спартакиада СВФУ</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#my-nav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    {% if user.is_authenticated %}
-    <ul class="navbar-nav">
-      <li class="nav-item acive"><a href="{% url 'sport:competition' %}" style="color: white; text-decoration: none;">Редактировать соревнования</a></li>
-      <li class="nav-item acive"><a href="#" style="color: white; text-decoration: none;">Подать заявку</a></li>
-      <li class="nav-item acive"><a href="#" style="color: white; text-decoration: none;">Судить</a></li>
-    </ul>
-    {% endif %}
-    <div id="my-nav" class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        {% if user.is_authenticated %}
-        <li class="nav-item acive"> <a href="/auth/logout" style="color: white; text-decoration: none;">Выйти ({{ user.username }})</a> </li>
-        {% else %}
-        <li> <a href="/auth/login" style="color: white; text-decoration: none;">Войти</a> </li>
-        {% endif %}
-      </ul>
-    </div>
-  </nav>
+  {% include "header.html" %}
   </header>
 <body>
     {% block main %}

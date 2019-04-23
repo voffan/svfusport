@@ -40,6 +40,19 @@
                     <!--<input type="radio" id="zach1" name="zach" class="form-check-input" value="В зачете" checked>-->
                     <label class="form-check-label">В зачете</label>
                 </div>
+                <div class="col-md-4">
+                        <div style="position:fixed;" class="list-group">
+                            <a href="/CM/index/" type="button" class="btn btn-success ">В главное меню</a>
+
+                            <input type="submit" value="Сохранить" class="list-group-item list-group-item-action">
+
+                            <a href="/CM/teamtable/" class="list-group-item list-group-item-action">Таблица заявок</a>
+
+                            <a href="/CM/tmembertable/" class="list-group-item list-group-item-action">Общий список спортсменов</a>
+
+                            <button id="teamAdd" name="button" value="personAdd" class="list-group-item list-group-item-action">Добавить спортсменов в команду</button>
+                        </div>
+                </div>
 
 
                 <div class="alert alert-success" role="alert" style="display:none">
@@ -53,91 +66,6 @@
             </form>
     </div>
 
-
-    <div class="col-md-4">
-            <div style="position:fixed;" class="list-group">
-                <a href="/CM/index/" type="button" class="btn btn-success ">В главное меню</a>
-
-                <input type="submit" value="Сохранить" class="list-group-item list-group-item-action">
-
-                <a href="/CM/teamtable/" class="list-group-item list-group-item-action">Таблица заявок</a>
-
-                <a href="/CM/tmembertable/" class="list-group-item list-group-item-action">Общий список спортсменов</a>
-
-                <button id="teamAdd" name="button" value="personAdd" class="list-group-item list-group-item-action">Добавить спортсменов в команду</button>
-            </div>
-    </div>
-
-<div class="container">
-    <div><h3>Подать Заявку</h3></div>
-    <div class="row">
-        <div class="form-group col-md-8">
-            <form method="POST" action="" id="form_create_view_form" class="align-self-center">{% csrf_token %}
-
-                <div class="form-group row" >
-                    <label class="col-sm-2 col-form-label">Соревнование</label>
-                    <div class="col-sm-6">
-                        {{ form.competition }}
-                        <!--<input type="text" id="sport" class="form-control" aria-describedby="sportHelp" placeholder="Введите вид спорта" name="sport">-->
-                        <small id="sportHelp" class="form-text text-muted">этоподсказка</small>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Организация</label>
-                    <div class="col-sm-6">
-                        {{ form.organization }}
-                        <small id="orgtHelp" class="form-text text-muted">этоподсказка</small>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Команда</label>
-                    <div class="col-md-6">
-                        {{form.name }}
-                        <small id="teamtHelp" class="form-text text-muted">этоподсказка</small>
-                    </div>
-                </div>
-
-                <div class="form-check">
-                    {{ form.not_resultable }}
-                    <!--<input type="radio" id="zach1" name="zach" class="form-check-input" value="В зачете" checked>-->
-                    <label class="form-check-label">В зачете</label>
-                </div>
-
-                <div class="col-md-4" style="position:fixed; right:0px; top:20px;">
-                    <div style="position:fixed;" class="list-group">
-                         <a href="/CM/index/" type="button" class="btn btn-success ">В главное меню</a>
-
-                         <input type="submit" value="Сохранить" class="list-group-item list-group-item-action">
-
-                        <a href="/CM/teamtable/" class="list-group-item list-group-item-action">Таблица заявок</a>
-
-                        <a href="/CM/tmembertable/" class="list-group-item list-group-item-action">Общий список спортсменов</a>
-
-                        <button id="teamAdd" name="button" value="personAdd" class="list-group-item list-group-item-action">Добавить спортсменов в команду</button>
-
-                        <!--<button id="teamChange" name="button" value="personChange" class="list-group-item list-group-item-action">Редактировать спортсменов в команде</button>-->
-                    </div>
-                </div>
-
-
-                <div class="alert alert-success" role="alert" style="display:none" id="trueTeam">
-                    Название команды свободно
-                </div>
-
-                <div class="alert alert-danger" role="alert" style="display:none" id="falseTeam">
-                    Название команды занято
-                </div>
-
-                <div>
-                {% include 'sport/memadd.html' %}
-                </div>
-
-
-            </form>
-    </div>
-</div>
 
 </div>
 

@@ -318,7 +318,7 @@ data['teamMember'] = teamMember
 
 return JsonResponse(data)
 
-''' создать заявку team'''
+ создать заявку team 
 def form_create_view(request):
     form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True, extra = 3)
     formset = form_member(queryset = TeamMember.objects.none())

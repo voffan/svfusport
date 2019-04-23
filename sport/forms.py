@@ -47,7 +47,8 @@ class CompetitionForm(forms.ModelForm):
         fields = [
             'date',
             'place',
-            'sport'
+            'sport',
+            'result'
         ]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

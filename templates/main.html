@@ -2,21 +2,22 @@
 {% block main %}
 <div class="row">
   <div class="container-fluid">
-    <div class="container">
+    <div class="container competition-slider-container">
       <h2>Ближайшие соревнования</h2>
-      {% for item in competition_5 %}
-        <div class="container bg-dark competition-slider competition-slider-{{ forloop.counter }}">
-          <div class="col-6">
-              <h3>{{ item.sport.name }}</h3>
+      <div class="single-item">
+        {% for item in competition_5 %}
+          <div class="container bg-dark competition-slider competition-slider-{{ forloop.counter }}">
+            <div class="">
+              <p>Дата проведения: <br><span class="competition-span">{{ item.date }}</span></p>
+              <p>Место проведения: <br><span class="competition-span">{{ item.place.name }}</span></p>
+              <a href="#" class="btn btn-primary competition-slider-info-btn">Посмотреть результаты</a>
+                <h3>{{ item.sport.name }}</h3>
+            </div>
           </div>
-          <div class="col-6 competition-slider-info">
-            <p>Дата проведения: <br><span class="competition-span">{{ item.date }}</span></p>
-            <p>Место проведения: <br><span class="competition-span">{{ item.place.name }}</span></p>
-          </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
     </div>
-    <div class="container">
+    <div class="container competition-list-container">
       <h2>Список соревнований</h2>
       {% for item in competition %}
         <div class="container competition-container-main">
@@ -47,6 +48,7 @@
 </div>
 
 <script>
+  /*
   i=1;
   j=0;
   $(".competition-slider").hide();
@@ -64,7 +66,8 @@
       i=1;
     }
   }
-  setInterval(func, 5000);
+  setInterval(func, 5000);*/
+  $(".single-item").slick();
 
   $(".competition-container-main").css("background-color", function(i,val){
   	if($(this).find("p").eq(0).attr("class") == "result_failed"){

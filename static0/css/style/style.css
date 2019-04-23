@@ -1,23 +1,35 @@
 .nav-item{
   padding-left: 30px;
 }
+.competition-slider-container{
+  margin-top: 30px;
+}
 .competition-slider{
-  height: 400px;
+  height: 430px;
   border-radius: 5px;
   display: flex;
-}
-.competition-slider-info p{
-  float: right;
-  padding-top: 15px;
-  padding-right: 15px;
+  margin-right: 5px;
+  margin-left: 5px;
 }
 .competition-slider h3{
   color: #fff;
   font-size: 40px;
-  padding-top: 340px;
+  padding-top: 200px;
 }
 .competition-slider p{
   color: #fff;
+
+  padding-top: 15px;
+  padding-right: 20px;
+}
+.competition-slider-info-btn{
+  float: right;
+  margin-right: 5px;
+  margin-top: 205px;
+
+}
+.competition-list-container{
+  margin-top: 30px;
 }
 .competition-container-main{
   background:#D3D5DE;

@@ -10,7 +10,7 @@ def index(request):
     args={}
     args['date_now'] = date.today()
     #args['competition'] = Competition.objects.all()
-    data = Competition.objects.all().order_by("date")
+    data = Competition.objects.all().order_by("-date")
     args['competition_5'] = data[:5]
     args['competition'] = data
     print(data)
