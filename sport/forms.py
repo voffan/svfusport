@@ -1,5 +1,5 @@
 from django import forms
-from .models import Team, Sport, Department, Competition, Person, TeamMember, Position, CompetitionJudge
+from .models import Team, Sport, Department, Competition, Person, TeamMember, Position, CompetitionJudge, TeamResult
 #from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, Select2Widget
 import datetime
 
@@ -19,8 +19,8 @@ class TeamForm(forms.ModelForm):
     #not_res = forms.BooleanField()
 
 class TeamForm(forms.ModelForm):
-    competition = forms.ModelChoiceField(queryset=Competition.objects.filter(date__lte=datetime.date.today()).order_by('date'), empty_label='Выберете соревнование',
-        widget = forms.Select(attrs = {'id':'sport', 'class':'form-control', 'aria-describedby':'sportHelp', 'placeholder':'Выберете соревнование', 'name' : 'sport'}))
+    competition = forms.ModelChoiceField(queryset=Competition.objects.filter(date__lte=datetime.date.today()).order_by('date'), empty_label='Выберите соревнование',
+        widget = forms.Select(attrs = {'id':'sport', 'class':'form-control', 'aria-describedby':'sportHelp', 'placeholder':'Выберите соревнование', 'name' : 'sport'}))
 
     organization = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label='Выберете УЧП',
         widget = forms.Select(attrs = {'id':'organzation', 'class':'form-control', 'aria-describedby':'orgHelp', 'placeholder':'Введите организацию', 'name' : 'org'}))
@@ -83,7 +83,7 @@ class JudgeForm(forms.ModelForm):
 class TeamMember_Form(forms.ModelForm):
     #team = forms.ModelChoiceField(queryset = Team.objects.all(), empty_label = 'Выберите команду')
 
-    sportsman = forms.ModelChoiceField(queryset = Person.objects.all(), empty_label = 'Выберете спортсмена')
+    sportsman = forms.ModelChoiceField(queryset = Person.objects.all(), empty_label = 'Выберите спортсмена')
 
     comments = forms.CharField(max_length = 100)
 
@@ -95,6 +95,22 @@ class TeamMember_Form(forms.ModelForm):
         ]
 
 
+class TeamResult_form(forms.ModelForm):
+
+    competition = forms.ModelChoiceField(queryset=Competition.objects.filter(date__lte=datetime.date.today()).order_by('date'), empty_label='Выберите соревнование',
+        widget = forms.Select(attrs = {'id':'competition', 'class':'form-control', 'aria-describedby':'competHelp', 'placeholder':'Выберите соревнование', 'name' : 'competition'}))
+
+    team = forms.ModelChoiceField(queryset=Team.objects.all(), empty_label='Выберите команду',
+        widget = forms.Select(attrs = {'id':'team', 'class':'form-control', 'aria-describedby':'teamHelp', 'placeholder':'Выберите команду', 'name' : 'team'}))
+
+    class Meta:
+        model = TeamResult
+        fields = [
+            'competition',
+            'team',
+            'result',
+            'points'
+        ]
 #добавление Персон в команду
 
 # class Person_Form(forms.Form):

@@ -33,14 +33,17 @@
       {% endblock %}
   </div>
 
-
+  <!--Посмотреть результаты  для User-->
+        <a href="{% url 'sport:teamresult' %}" class="btn btn-block btn-primary">Посмотреть результаты (User)</a>
+  <!--Посмотреть результаты  для Admin-->
+        <a href="{% url 'sport:teamResultCreate' %}" class="btn btn-block btn-primary">Вывести результаты (Admin)</a>
 
 
       {% block table_input %}{% endblock %}
 
       {% block form_change %}{% endblock %}
 
-      {% block team_member %}{% endblock %}
+      {% block result_team %}{% endblock %}
 
       {% block form_change_member %}{% endblock %}
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>

@@ -58,7 +58,7 @@ class Department(models.Model):
 class Team(models.Model):
     competition = models.ForeignKey(Sport, verbose_name="Вид Спорта", db_index=True, on_delete=models.CASCADE)
     organization = models.ForeignKey(Department, verbose_name="Организация", db_index=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, verbose_name= "Название команды", db_index=True)
+    name = models.CharField(max_length=100, verbose_name= "Название команды", unique=True)
     not_resultable = models.BooleanField(verbose_name='Вне зачета', default=False)
 
     def __str__(self):
@@ -88,7 +88,7 @@ class Competition(models.Model):
 class Team(models.Model):
     competition = models.ForeignKey(Competition, verbose_name="Соревнование", db_index=True, on_delete=models.CASCADE)
     organization = models.ForeignKey(Department, verbose_name="Организация", db_index=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, verbose_name= "Название команды", db_index=True)
+    name = models.CharField(max_length=100, verbose_name= "Название команды", unique=True)
     not_resultable = models.BooleanField(verbose_name='Вне зачета', default=False)
 
     def __str__(self):

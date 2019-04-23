@@ -1,16 +1,10 @@
-{% extends 'sport/index.html' %}
-{% block form_change_member %}
 <h1>Редактировать спортсмена</h1>
 <div class="col-sm">
 
-    <form method="POST" action="">{% csrf_token %}
-     {{ form }}
-        <input type="submit" value="Сохранить" />
 
-        <a href="http://localhost:8000/CM/teamtable/">
-         <input type="button" value="Таблица заявок">
-        </a>
-    </form>
+     {{ formset.management_form }}
+        {% for f2 in formset %}
+            {{ f2.as_p }}
+        {% endfor %}
 
 </div>
-{% endblock %}

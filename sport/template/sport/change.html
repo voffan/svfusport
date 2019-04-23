@@ -1,4 +1,8 @@
-{% extends 'sport/index.html' %}
+{% extends "sport/index.html" %}
+{% block css %} {{ form.media.css }}{% endblock %}
+
+{% block js %} {{ form.media.js }} {% endblock %}
+
 {% block form_change %}
 <h1>Изменить заявку</h1>
 <div class="col-sm">
@@ -39,6 +43,7 @@
         <div>
 
         </div>
+        {% include 'sport/membChange.html' %}
     </form>
 
 </div>
