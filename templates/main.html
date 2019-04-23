@@ -1,6 +1,82 @@
-{% extends "index.html" %}
+{% extends 'index.html' %}
 {% block main %}
+<div class="row">
+  <div class="container-fluid">
+    <div class="container">
+      <h2>Ближайшие соревнования</h2>
+      {% for item in competition_5 %}
+        <div class="container bg-dark competition-slider competition-slider-{{ forloop.counter }}">
+          <div class="col-6">
+              <h3>{{ item.sport.name }}</h3>
+          </div>
+          <div class="col-6 competition-slider-info">
+            <p>Дата проведения: <br><span class="competition-span">{{ item.date }}</span></p>
+            <p>Место проведения: <br><span class="competition-span">{{ item.place.name }}</span></p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="container">
+      <h2>Список соревнований</h2>
+      {% for item in competition %}
+        <div class="container competition-container-main">
+          <div class="col-4">
+            <h3>{{ item.sport.name }}</h3>
+            {% if item.date < date_now and item.result %}
+              <p class="result_yes" style="margin-top: -30px;
+              ">[Закрыто]</p>
+            {% elif item.date < date_now and not item.result %}
+              <p class="result_failed" style="margin-top: -30px;
+              ">[Провалено]</p>
+            {% else %}
+              <p class="result_no" style="margin-top: -30px;
+              ">[Открыто]</p>
+            {% endif %}
+          </div>
+          <div class="col-4">
+            <p>Дата проведения: <br><span class="competition-span">{{ item.date }}</span></p>
+            <p>Место проведения: <br><span class="competition-span">{{ item.place.name }}</span></p>
+          </div>
+          <div class="col-4">
+            <button type="button" name="button" class="btn btn-dark competition-btn">Посмотреть результаты</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 
-<h3>MAIN PAGE(debug version)</h3>
+<script>
+  i=1;
+  j=0;
+  $(".competition-slider").hide();
+  $(".competition-slider-1").show();
+  function func(){
+    $(".competition-slider-"+i).show();
+    if(i==1){
+      $(".competition-slider-"+5).hide();
+    }
+    i++;
+    j=i-2;
+    console.log(j);
+    $(".competition-slider-"+j).hide();
+    if(i==6) {
+      i=1;
+    }
+  }
+  setInterval(func, 5000);
 
+  $(".competition-container-main").css("background-color", function(i,val){
+  	if($(this).find("p").eq(0).attr("class") == "result_failed"){
+  	  return "#CE9C92";
+      }
+  	else if ($(this).find("p").eq(0).attr("class") == "result_yes"){
+      return "#92C18B"
+      }
+    else if ($(this).find("p").eq(0).attr("class") == "result_no"){
+      return "#B4B383"
+      }
+  	   return val;
+      });
+</script>
 {% endblock %}

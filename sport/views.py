@@ -2,17 +2,18 @@ import datetime
 from django.template.context_processors import csrf
 from django.db.models import Q
 from django.contrib import auth
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
 from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge, TeamMember
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.template.context_processors import csrf
-from .forms import CompetitionForm, JudgeForm
+from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form
 from django.forms import modelformset_factory, inlineformset_factory, formset_factory
 from django import forms
 import json
 from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 # Create your views here.
 
@@ -66,6 +67,7 @@ def competition(request):
     for i, item in enumerate(competition):
         json_collection.append({
         "competition_id": str(item.id),
+        "url": reverse('sport:competitionedit', args=[item.id]),
         "id": str(i+1),
         "sport": item.sport.name,
         "date": str(item.date),
@@ -74,24 +76,13 @@ def competition(request):
     args={}
     data=mark_safe(json.dumps(json_collection, ensure_ascii=False))
     args['json_collection'] = data
-    '''
-    if 'q' in request.GET.keys():
-        args={}
-        query = request.GET.get('q')
-        founded_values = Competition.objects.filter(
-            Q(sport__name__icontains = query)|
-            Q(place__name__icontains = query)
-        )
-        args['competition'] = founded_values
-        args['search_values'] = 'Результаты поиска: ' + str(founded_values.count()) + ' результатов по запросу "' + str(query) + '"'
-        return render(request, 'sport/competitiond.html', args)'''
     return render(request, 'sport/competitiond.html', args)
 
 
 def competitionedit(request, competition_id):
     competition = Competition.objects.get(pk = competition_id)
     judge = CompetitionJudge.objects.filter(competition__id = competition_id).first()
-    form_judge = modelformset_factory(CompetitionJudge, form = JudgeForm, can_delete=True, extra=0)
+    form_judge = modelformset_factory(CompetitionJudge, form = JudgeForm, can_delete=True, extra=1)
     formset = form_judge(queryset=CompetitionJudge.objects.filter(competition__id = competition_id))
     if request.method == 'POST':
         args={}
@@ -125,6 +116,7 @@ def competitionedit(request, competition_id):
         'formset': formset,
         })
 
+
 '''
 def competitionedit(request, competition_id):
     competition = Competition.objects.get(pk = competition_id)
@@ -157,7 +149,7 @@ def competitionedit(request, competition_id):
 def competitioncreate(request):
     args={}
     args['create'] = 'true'
-    form_judge = modelformset_factory(CompetitionJudge, form = JudgeForm, can_delete=True, extra=10)
+    form_judge = modelformset_factory(CompetitionJudge, form = JudgeForm, can_delete=True)
     formset = form_judge(queryset=CompetitionJudge.objects.none())
     if request.method == 'POST':
         form = CompetitionForm(request.POST)
@@ -186,7 +178,7 @@ def competitioncreate(request):
 
 
 
-'''функции изменения - удаления - добавления Team'''
+'''функции изменения Team'''
 def form_change_view(request, id):
     team = get_object_or_404(Team, id=id)
     if request.method == 'POST':
@@ -235,29 +227,25 @@ def team_remove_view(request, id):
 
 
 ''' Посмотреть участников команды'''
-
 def team_member(request):
     teamMember = TeamMember.objects.all()
-    pe = Person.objects.all()
-
     context={
         'teamMember': teamMember,
-        'pe': pe
     }
     return render(request, 'sport/tmembertable.html', context)
 
 
 '''Добавить спортсмена'''
-def member_create_view(request):
-    if request.method == 'POST':
-        form = TeamMember_Form(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-            except:
-                return HttpResponse('Error')
-        return HttpResponseRedirect('/CM/tmembertable/')
-    return render(request, 'sport/memadd.html', {'form': TeamMember_Form()})
+# def member_create_view(request):
+#     if request.method == 'POST':
+#         form = TeamMember_Form(request.POST)
+#         if form.is_valid():
+#             try:
+#                 form.save()
+#             except:
+#                 return HttpResponse('Error')
+#         return HttpResponseRedirect('/CM/tmembertable/')
+#     return render(request, 'sport/memadd.html', {'form': TeamMember_Form()})
 
 
 ''' удалить спортсмена из списка-команд'''
@@ -293,26 +281,74 @@ def team_member(request):
 result={"success":True}
 
 return HttpResponse(json.dumps(result), content_type='application/json')
-'''
-'''
 def team_member(request):
 teamMember = list(TeamMember.objects.all().values())
 data = dict()
 data['teamMember'] = teamMember
 
 return JsonResponse(data)
-'''
 
 def form_create_view(request):
     if request.method == 'POST':
         form = TeamForm(request.POST)
         if form.is_valid():
             try:
-                team = form.save()
+                team = form.save()'''
+def member_create_view(request):
+    context = {}
+    #team = TeamMember.objects.get(pk = id)
+    #Smemberteam = TeamMember.objects.filter(team_id = id).first()
+    form1 = TeamMember_Form(request.POST)
+    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete=True, extra=3)
+    formset = form_member(queryset = TeamMember.objects.none())
+    if request.method == 'POST':
+        formset = form_member(request.POST)
+        if form1.is_valid() and formset.is_valid():
+            try:
+                member = form1.save(commit = False)
+                member.save()
+
+                for memb in formset:
+                    data = memb.save(commit=False)
+                    data.member = member
+                    data.save()
+                # new_team = form1.save()
+                # form1.save()
+                # form_m = form_member(request.POST)
+                # if form_m.is_valid():
+                #     instances = form_m.save(commit=False)
+                #     for instance in instances:
+                #         instance.team = new_team
+                #         instance.save()
+            except:
+                return HttpResponse('Error')
+            return HttpResponseRedirect('/CM/tmembertable/') # redirect(reverse('sport:table_input'))
+    context['form1'] = form1
+    context['formset'] = formset
+
+
+    return render(request, 'sport/teamadding.html', context)
+
+
+''' создать заявку'''
+def form_create_view(request):
+    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True, extra = 3)
+    formset = form_member(queryset = TeamMember.objects.none())
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+        formset = form_member(request.POST)
+        if form.is_valid() and formset.is_valid():
+            try:
+                team=form.save()
+                objects = formset.save(commit = False)
+                for mem in objects:
+                    mem.team = team
+                    mem.save()
+
             except:
                 return HttpResponse('Error')
         return HttpResponseRedirect('/CM/teamtable/') #redirect(reverse('sport:table_input'))
-    return render(request, 'sport/teamadding.html', {'form': TeamForm()})
+    return render(request, 'sport/teamadding.html', {'form': TeamForm(),'formset': formset})
 
 
 # декоратор POST - 1 это обеспечение POST запросов
