@@ -3,21 +3,30 @@
 {% load static %}
 {% block competition %}
 {% if user.is_authenticated %}
-<div class="container">
-  <div class="row no-gutters">
-    <div class="col-md-9 bg-dark" style=" height: 91vh; overflow-y: scroll;">
-      <div class="table-responsive-xl">
+  <div class="row">
+    <div class="container-fluid">
+      <div class="container competitiond-menu bg-dark">
+        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary">Добавить соревнование</a>
+        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary">Копировать соревнования</a>
+        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary">Удалить соревнования</a>
+        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary">Закрыть  соревнования</a>
+      </div>
+      <div class="container">
         <script id="template" type="text/template">
-          <table class="table table-hover table-bordered table-sm table-justified" id="tbl_1">
+          <table class="table table-hover table-bordered table-sm" id="tbl_1">
               <thead class="active thead-light">
               <tr>
-                <!--
-                  <!--<th class="table-warning" style="width: 5%">№</th>
-                  <th style="width: 20%">Вид спорта</th>
-                  <th style="width: 20%">Дата проведения</th>
-                  <th style="width: 20%">Место проведения</th>
-                  <th style="width: 6%"></th>-->
-                  <input type="text" class="search" />
+                <h3 class="padd-top-competition">Список соревнований</h3>
+                  <div class="search-form bg-dark">
+                    <div class="row">
+                      <div class="col-1 ">
+                        <p>Поиск:</p>
+                      </div>
+                      <div class="col-11">
+                        <input type="text" class="search form-control" placeholder="Введите строку для поиска..." />
+                      </div>
+                    </div>
+                  </div>
                   <th class="table-warning" style="width: 5%">№</th>
                   <th style="width: 20%" >Вид спорта</th>
                   <th style="width: 20%" >Дата</th>
@@ -25,27 +34,7 @@
 
               </tr>
               </thead>
-              <tbody><!--
-              {% for item in competition %}
-              <tr>
-
-                  <td style="background: white;">{{ forloop.counter }}</td>
-                  <td style="background: white;"><a href="{% url 'sport:competitionedit' item.id %}">{{ item.sport.name }}</a></td>
-                  <td style="background: white;">{{ item.date }}</td>
-                  <td style="background: white;">{{ item.place.name }}</td>
-                  <td style="background: white;">
-                    <div class="btn-group">
-                      <button type="button" class="btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown">
-                        Действие
-                      </button>
-                      <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Удалить</a>
-                        <a class="dropdown-item" href="{% url 'sport:competitionedit' item.id %}">Редактировать</a>
-                      </div>
-                    </div>
-                  </td>
-              </tr>
-              {% endfor %}-->
+              <tbody>
               </tbody>
           </table>
           </script>
@@ -53,95 +42,10 @@
       </div>
     </div>
 
-    <script>
-        var Competition = Backbone.Model;
-        var CompetitionCollection = Backbone.Collection.extend({});
-        var competition = new CompetitionCollection(JSON.parse('{{json_collection}}'));
-        //competition.fetch();
-        //alert(competition);
-
-        var CollectionView = Backbone.View.extend({
-
-      	template: $('#template').html(),
-
-      	initialize: function() {
-
-            this.collection = competition;
-      		new RowView({ collection: this.collection });
-      		this.collection.on('add', this.addOne, this);
-      		// this.collection.fetch();
-          $('.search').on("keyup", function(){
-            console.log('loh');
-          });
-
-              this.render();
-      	},
-
-      	events: {
-      		'keyup .search': 'search',
-      	},
-
-      	// Returns array subset of models that match search.
-      	search: function(e) {
-
-      		var search = this.$('.search').val().toLowerCase();
-
-              this.$('tbody').empty(); // is this creating ghost views?
-
-      		_.each(this.collection.filter(function(model) {
-      			return _.some(
-      				model.values(),
-      				function(value) {
-      					return ~value.toLowerCase().indexOf(search);
-      				});
-      		}), $.proxy(this.addOne, this));
-      	},
-
-      	addOne: function(model) {
-
-              // add row
-      		var view = new RowView({ model: model });
-      		this.$('tbody').append(view.render().el);
-      	},
-
-      	render: function() {
-
-              // first render
-      		$('#insert').replaceWith(this.$el.html(this.template));
-              this.collection.each(this.addOne, this);
-      	}
-      });
-
-      var RowView = Backbone.View.extend({
-
-      	tagName: 'tr',
-
-      	events: {
-              // Some detail view will listen for this.
-      		// App.trigger('person:view', this.model);
-      	},
-      	render: function() {
-          //alert(this.model.get('competition_id'));
-      		this.$el.html('<td  style="background: white;">' + this.model.get('id') + '</td><td style="background: white;"><a href="' + this.model.get('url') + '">' + this.model.get('sport') + '</a>' + '</td><td style="background: white;">' + this.model.get('date') + '</td><td style="background: white;">' + this.model.get('place') + '</td>');
-          //this.$el.html('<td  style="background: white;">' + this.model.get('id') + '</td><td style="background: white;"><a href="/CM/competitionedit/' + this.model.get('competition_id') + '">' + this.model.get('sport') + '</a>' + '</td><td style="background: white;">' + this.model.get('date') + '</td><td style="background: white;">' + this.model.get('place') + '</td>');
-              return this;
-      	}
-      });
-
-      new CollectionView;
-    </script>
-
-    <div class="col-3 bg-light" style=" height: 91vh;">
-      <div class="container">
-          <div class="form-group" style="padding-top: 20px;">
-              <label for="Search">Поиск</label>
-              <input class="form-control" id="search" name="q" type="text" placeholder="Введите искомое..." aria-label="Search">
-          </div>
-        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-block btn-primary">Добавить соревнование</a>
-      </div>
-    </div>
   </div>
-</div>
+  <script>
+    {% include 'js/tablescript.js' %}
+  </script>
 {% else %}
   <div class="container">
       <h3>Войдите чтобы видеть список соревнований</h3>

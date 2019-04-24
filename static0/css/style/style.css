@@ -5,16 +5,21 @@
   margin-top: 30px;
 }
 .competition-slider{
-  height: 430px;
+  height: 400px;
+  width: 100%;
   border-radius: 5px;
   display: flex;
-  margin-right: 5px;
-  margin-left: 5px;
+}
+.carousel-control-next{
+  margin-right: -60px;
+}
+.carousel-control-prev{
+  margin-left: -60px;
 }
 .competition-slider h3{
   color: #fff;
   font-size: 40px;
-  padding-top: 200px;
+  padding-top: 143px;
 }
 .competition-slider p{
   color: #fff;
@@ -25,7 +30,8 @@
 .competition-slider-info-btn{
   float: right;
   margin-right: 5px;
-  margin-top: 205px;
+  margin-bottom: 40px;
+  margin-top: 325px;
 
 }
 .competition-list-container{
@@ -63,6 +69,9 @@
   padding-right: 15px;
   padding-top: 20px;
 }
+.padd-top{
+  margin-top: 30px;
+}
 .padd-right{
   padding-left: 15px;
   padding-right: 35px;
@@ -77,4 +86,31 @@
 .scroll{
   height: 91vh;
   overflow-y: scroll;
+}
+.competitiond-menu{
+  margin-top: 10px;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  padding-right: 8px;
+  padding-left: 8px;
+  border-radius: 5px;
+  position: fixed;
+  margin-left: 160px;
+}
+.search-form{
+  border-radius: 5px;
+  color: #fff;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  padding-right: 8px;
+}
+.search-form p{
+  font-size: 20px;
+  padding-top: 2px;
+  padding-left: 10px;
+  margin-bottom: 3px;
+}
+.padd-top-competition{
+  margin-top: 80px;  
 }

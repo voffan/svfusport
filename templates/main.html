@@ -3,27 +3,49 @@
 <div class="row">
   <div class="container-fluid">
     <div class="container competition-slider-container">
-      <h2>Ближайшие соревнования</h2>
-      <div class="single-item">
-        {% for item in competition_5 %}
-          <div class="container bg-dark competition-slider competition-slider-{{ forloop.counter }}">
-            <div class="">
-              <p>Дата проведения: <br><span class="competition-span">{{ item.date }}</span></p>
-              <p>Место проведения: <br><span class="competition-span">{{ item.place.name }}</span></p>
-              <a href="#" class="btn btn-primary competition-slider-info-btn">Посмотреть результаты</a>
+      <h3>Ближайшие соревнования</h3>
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+        </ol>
+        <div class="carousel-inner">
+          {% for item in competition_5 %}
+          <div class="carousel-item" id="active-trigger">
+            <div class="container bg-dark competition-slider">
+              <div class="col-6">
+                <p>Дата проведения: <br><span class="competition-span">{{ item.date }}</span></p>
+                <p>Место проведения: <br><span class="competition-span">{{ item.place.name }}</span></p>
                 <h3>{{ item.sport.name }}</h3>
+              </div>
+              <div class="col-6">
+                <a href="#" class="btn btn-primary competition-slider-info-btn">Посмотреть результаты</a>
+              </div>
             </div>
           </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
       </div>
     </div>
+
     <div class="container competition-list-container">
       <h2>Список соревнований</h2>
       {% for item in competition %}
         <div class="container competition-container-main">
           <div class="col-4">
             <h3>{{ item.sport.name }}</h3>
-            {% if item.date < date_now and item.result %}
+            {% if item.result %}
               <p class="result_yes" style="margin-top: -30px;
               ">[Закрыто]</p>
             {% elif item.date < date_now and not item.result %}
@@ -39,7 +61,19 @@
             <p>Место проведения: <br><span class="competition-span">{{ item.place.name }}</span></p>
           </div>
           <div class="col-4">
+            {% if user.is_authenticated %}
+            <div class="dropdown">
+              <button class="btn btn-dark dropdown-toggle competition-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Операции
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'sport:competitionedit' item.id %}">Редактировать</a>
+                <a class="dropdown-item" href="#">Подать заявку</a>
+              </div>
+            </div>
+            {% else %}
             <button type="button" name="button" class="btn btn-dark competition-btn">Посмотреть результаты</button>
+            {% endif %}
           </div>
         </div>
       {% endfor %}
@@ -48,26 +82,6 @@
 </div>
 
 <script>
-  /*
-  i=1;
-  j=0;
-  $(".competition-slider").hide();
-  $(".competition-slider-1").show();
-  function func(){
-    $(".competition-slider-"+i).show();
-    if(i==1){
-      $(".competition-slider-"+5).hide();
-    }
-    i++;
-    j=i-2;
-    console.log(j);
-    $(".competition-slider-"+j).hide();
-    if(i==6) {
-      i=1;
-    }
-  }
-  setInterval(func, 5000);*/
-  $(".single-item").slick();
 
   $(".competition-container-main").css("background-color", function(i,val){
   	if($(this).find("p").eq(0).attr("class") == "result_failed"){
@@ -80,6 +94,10 @@
       return "#B4B383"
       }
   	   return val;
-      });
+     });
+     $("#active-trigger").attr("class","carousel-item active");
+     $('.carousel').carousel({
+       interval: 5000,
+     })
 </script>
 {% endblock %}
