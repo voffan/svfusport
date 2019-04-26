@@ -112,6 +112,11 @@ class TeamResult_form(forms.ModelForm):
             'result',
             'points'
         ]
+
+        def __init__(self, *args, **kwargs):
+            super(TeamResult_form, self).__init__(*args, **kwargs)
+            self.fields['competition'].requred = False
+            self.fields['team'].requred = False
 #добавление Персон в команду
 
 # class Person_Form(forms.Form):

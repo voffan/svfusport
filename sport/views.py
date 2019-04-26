@@ -10,7 +10,7 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.template.context_processors import csrf
 from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form, TeamResult_form
-from django.forms import modelformset_factory, inlineformset_factory, formset_factory
+from django.forms import modelformset_factory, inlineformset_factory, formset_factory, modelform_factory
 from django import forms
 import json
 from django.utils.safestring import mark_safe
@@ -425,15 +425,27 @@ def result_team(request, competition_id):
 
 ''' Задать результаты'''
 def create_result_team(request):
+    context = {}
+    form = TeamResult_form(request.POST)
+    form_team = modelformset_factory(TeamResult, form = TeamResult_form, extra = 15, fields = ('team', 'result', 'points'))
+    formset = form_team(queryset = TeamResult.objects.none())
+
     if request.method == 'POST':
-        form = TeamResult_form(request.POST)
-        if form.is_valid():
+        formset = form_team(request.POST)
 
-                form.save()
+        if form.is_valid() and formset.is_valid():
+                team = form.save(commit = False)
+                team.save()
 
+                for t in formset:
+                    data = t.save(commit = False)
+                    data.team = team
+                    data.save()
 
         return HttpResponseRedirect('/CM/teamresult')
-    return render(request, 'sport/createResult.html', {'form': TeamResult_form()})
+    context['form'] = form
+    context['formset'] = formset
+    return render(request, 'sport/createResult.html', context)
 
 
 
