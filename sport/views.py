@@ -5,11 +5,11 @@ from django.db import IntegrityError
 from django.contrib import auth
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
-from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge, TeamMember
+from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge, TeamMember, Competition_name
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.template.context_processors import csrf
-from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form, TeamResult_form
+from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form, TeamResult_form, TeamResult_form_competition
 from django.forms import modelformset_factory, inlineformset_factory, formset_factory, modelform_factory
 from django import forms
 import json
@@ -318,7 +318,7 @@ data['teamMember'] = teamMember
 
 return JsonResponse(data)
 
- создать заявку team 
+ создать заявку team
 def form_create_view(request):
     form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True, extra = 3)
     formset = form_member(queryset = TeamMember.objects.none())
@@ -426,24 +426,27 @@ def result_team(request, competition_id):
 ''' Задать результаты'''
 def create_result_team(request):
     context = {}
-    form = TeamResult_form(request.POST)
-    form_team = modelformset_factory(TeamResult, form = TeamResult_form, extra = 15, fields = ('team', 'result', 'points'))
+    form = TeamResult_form_competition()
+    form_team = modelformset_factory(TeamResult, form = TeamResult_form, extra = 2)
     formset = form_team(queryset = TeamResult.objects.none())
-
     if request.method == 'POST':
-        formset = form_team(request.POST)
-
-        if form.is_valid() and formset.is_valid():
-                team = form.save(commit = False)
-                team.save()
-
+        form_c = TeamResult_form_competition(request.POST)
+        competition_id = form_c.save(commit = False)
+        if form_c.is_valid():
+            form_r = form_team(request.POST)
+            if form_r.is_valid():
+                instances = form_r.save(commit=False)
+                for instance in instances:
+                    instance.competition = competition_id.competition
+                    instance.save()
+                '''
                 for t in formset:
                     data = t.save(commit = False)
                     data.team = team
-                    data.save()
+                    data.save()'''
 
-        return HttpResponseRedirect('/CM/teamresult')
-    context['form'] = form
+        return HttpResponseRedirect('/CM/teamresult/')
+    context['form_competition'] = form
     context['formset'] = formset
     return render(request, 'sport/createResult.html', context)
 

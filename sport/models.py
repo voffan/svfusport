@@ -74,7 +74,6 @@ class Jrebiy(models.Model):
         if(team.competition == 1):
 '''
 
-
 class Competition(models.Model):
     date = models.DateField(verbose_name = "Дата соревнования", default=datetime.date.today())
     place = models.ForeignKey(Place, verbose_name = "Место проведения", null = True, blank = True, on_delete = models.CASCADE)
@@ -84,6 +83,8 @@ class Competition(models.Model):
     def __str__(self):
         return self.sport.name + ' : ' + str(self.date)
 
+class Competition_name(models.Model):
+    competition = models.ForeignKey(Competition, verbose_name = "Соревнование", null = True, blank = True, on_delete = models.CASCADE)
 
 class Team(models.Model):
     competition = models.ForeignKey(Competition, verbose_name="Соревнование", db_index=True, on_delete=models.CASCADE)

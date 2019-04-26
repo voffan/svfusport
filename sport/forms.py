@@ -1,5 +1,5 @@
 from django import forms
-from .models import Team, Sport, Department, Competition, Person, TeamMember, Position, CompetitionJudge, TeamResult
+from .models import Team, Sport, Department, Competition, Person, TeamMember, Position, CompetitionJudge, TeamResult,Competition_name
 #from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, Select2Widget
 import datetime
 
@@ -98,25 +98,25 @@ class TeamMember_Form(forms.ModelForm):
 
 class TeamResult_form(forms.ModelForm):
 
-    competition = forms.ModelChoiceField(queryset=Competition.objects.filter(date__lte=datetime.date.today()).order_by('date'), empty_label='Выберите соревнование',
-        widget = forms.Select(attrs = {'id':'competition', 'class':'form-control', 'aria-describedby':'competHelp', 'placeholder':'Выберите соревнование', 'name' : 'competition'}))
-
     team = forms.ModelChoiceField(queryset=Team.objects.all(), empty_label='Выберите команду',
         widget = forms.Select(attrs = {'id':'team', 'class':'form-control', 'aria-describedby':'teamHelp', 'placeholder':'Выберите команду', 'name' : 'team'}))
 
     class Meta:
         model = TeamResult
         fields = [
-            'competition',
             'team',
             'result',
             'points'
         ]
 
-        def __init__(self, *args, **kwargs):
-            super(TeamResult_form, self).__init__(*args, **kwargs)
-            self.fields['competition'].requred = False
-            self.fields['team'].requred = False
+
+class TeamResult_form_competition(forms.ModelForm):
+    class Meta:
+        model = Competition_name
+        fields = [
+            'competition'
+        ]
+
 #добавление Персон в команду
 
 # class Person_Form(forms.Form):
