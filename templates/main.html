@@ -22,7 +22,7 @@
                 <h3>{{ item.sport.name }}</h3>
               </div>
               <div class="col-6">
-                <a href="#" class="btn btn-primary competition-slider-info-btn">Посмотреть результаты</a>
+                <a href="{% url 'sport:teamresult' item.id %}" class="btn btn-primary competition-slider-info-btn">Посмотреть результаты</a>
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@
               </div>
             </div>
             {% else %}
-            <button type="button" name="button" class="btn btn-dark competition-btn">Посмотреть результаты</button>
+            <a href="{% url 'sport:teamresult' item.id %}"><button type="button" name="button" class="btn btn-dark competition-btn">Посмотреть результаты</button></a>
             {% endif %}
           </div>
         </div>

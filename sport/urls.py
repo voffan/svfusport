@@ -22,7 +22,7 @@ urlpatterns = [
     path('tmembertable/<int:id>/membremove/', views.member_remove_view, name="member_remove_view"),
     path('memPersAdd/', views.member_create_view, name="member_create_view"),
 
-    path('teamresult/', views.result_team, name="teamresult"), # Результаты соревнования
+    path('teamresult/<int:competition_id>', views.result_team, name="teamresult"), # Результаты соревнования
     path('teamResultCreate/', views.create_result_team, name="teamResultCreate"), #задать результаты
 
     path('competition/', views.competition, name="competition"),

@@ -413,8 +413,10 @@ def member_create_view(request):
 
 
 ''' Результаты соревнования '''
-def result_team(request):
-    teamRes = TeamResult.objects.all()
+def result_team(request, competition_id):
+
+    teamRes = TeamResult.objects.filter(competition__id = competition_id).order_by('result')
+
     context = {
         'teamRes': teamRes,
     }
