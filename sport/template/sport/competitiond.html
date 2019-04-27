@@ -3,48 +3,78 @@
 {% load static %}
 {% block competition %}
 {% if user.is_authenticated %}
-  <div class="row">
-    <div class="container-fluid">
-      <div class="container competitiond-menu bg-dark">
-        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary">Добавить соревнование</a>
-        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary">Копировать соревнования</a>
-        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary">Удалить соревнования</a>
-        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary">Закрыть  соревнования</a>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2 padd-left padd-top">
+        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary btn-block">Добавить соревнование</a>
+        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary btn-block">Копировать соревнования</a>
+        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary btn-block">Удалить соревнования</a>
+        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary btn-block">Закрыть  соревнования</a>
       </div>
-      <div class="container">
+      <div class="col-9">
         <script id="template" type="text/template">
-          <table class="table table-hover table-bordered table-sm" id="tbl_1">
-              <thead class="active thead-light">
-              <tr>
-                <h3 class="padd-top-competition">Список соревнований</h3>
-                  <div class="search-form bg-dark">
-                    <div class="row">
-                      <div class="col-1 ">
-                        <p>Поиск:</p>
-                      </div>
-                      <div class="col-11">
-                        <input type="text" class="search form-control" placeholder="Введите строку для поиска..." />
-                      </div>
-                    </div>
-                  </div>
-                  <th class="table-warning" style="width: 5%">№</th>
-                  <th style="width: 20%" >Вид спорта</th>
-                  <th style="width: 20%" >Дата</th>
-                  <th style="width: 20%" >Место</th>
-
-              </tr>
-              </thead>
-              <tbody>
-              </tbody>
-          </table>
+          <h3 class="padd-top-competition">Список соревнований</h3>
+            <div class="search-form bg-dark">
+              <div class="row">
+                <div class="col-1 ">
+                  <p>Поиск: </p>
+                </div>
+                <div class="col-11">
+                  <input type="text" class="search form-control" placeholder="Введите строку для поиска..." />
+                </div>
+              </div>
+            </div>
+            <div class="flex">
+              <th style="width: 3%"><input type="checkbox" name="" value="" class="all" data-id="d1"></th>
+              <div class="showhide-div" id="showhide-div">
+                <th style="width: 3%">Удалить</th>
+                <th style="width: 3%" >Отметить</th>
+              </div>
+            </div>
+            <div class="scroll">
+              <table class="table table-hover table-bordered table-sm" id="tbl_1" style="font-size: 18px;">
+                  <thead class="active thead-light">
+                  <tr>
+                      <th style="width: 3%"> </th>
+                      <th class="table-warning" style="width: 3%">№</th>
+                      <th style="width: 20%" >Вид спорта</th>
+                      <th style="width: 20%" >Дата</th>
+                      <th style="width: 20%" >Место</th>
+                  </tr>
+                  </thead>
+                    <tbody>
+                    </tbody>
+              </table>
+            </div>
           </script>
-          <div id="insert"></div>
+          <div id="insert">
+          </div>
       </div>
     </div>
-
   </div>
   <script>
     {% include 'js/tablescript.js' %}
+    $("#showhide-div").hide();
+
+    $(document).ready(function() {
+    $(".all").on("change", function() {
+        var groupId = $(this).data('id');
+        $('.one[data-id="' + groupId + '"]').prop("checked", this.checked);
+      });
+    $(".one").on("change", function() {
+        var groupId = $(this).data('id');
+        var allChecked = $('.one[data-id="' + groupId + '"]:not(:checked)').length == 0;
+        $('.all[data-id="' + groupId + '"]').prop("checked", allChecked);
+      });
+    });
+    $( ".all" ).change(function() {
+      if ($(".all").prop("checked")){
+          $("#showhide-div").show();
+        }
+      else {
+         $("#showhide-div").hide();
+       };
+    });
   </script>
 {% else %}
   <div class="container">

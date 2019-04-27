@@ -76,6 +76,7 @@ def competition(request):
 
 def competitionedit(request, competition_id):
     competition = Competition.objects.get(pk = competition_id)
+    name = competition.sport.name + "(" + str(competition.date) + ")"
     judge = CompetitionJudge.objects.filter(competition__id = competition_id).first()
     form_judge = modelformset_factory(CompetitionJudge, form = JudgeForm, can_delete=True, extra=1)
     formset = form_judge(queryset=CompetitionJudge.objects.filter(competition__id = competition_id))
@@ -109,6 +110,7 @@ def competitionedit(request, competition_id):
     return render(request, 'sport/competitiondEdit.html', {
         'form': CompetitionForm(instance = competition),
         'formset': formset,
+        'name': name
         })
 
 

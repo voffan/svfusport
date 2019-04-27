@@ -112,5 +112,16 @@
   margin-bottom: 3px;
 }
 .padd-top-competition{
-  margin-top: 80px;  
+  margin-top: 20px;
+}
+.flex{
+  display: flex;
+}
+.scroll{
+  height: 74vh;
+  overflow-y: scroll;
+}
+.scroll-80{
+  height: 80vh;
+  overflow-y: scroll;
 }
