@@ -1,7 +1,8 @@
 from django import forms
-from .models import Team, Sport, Department, Competition, Person, TeamMember, Position, CompetitionJudge, TeamResult,Competition_name
+from .models import Team, Sport, Department, Competition, Person, TeamMember, Position, CompetitionJudge, TeamResult,Competition_name, Place
 #from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, Select2Widget
 import datetime
+from svfusport import settings
 
 '''
 class SportName(forms.ModelChoiceField):
@@ -40,8 +41,11 @@ class TeamForm(forms.ModelForm):
 class ChangeTeamForm(TeamForm):
     pass
 
+class datewidget(forms.DateInput):
+    input_type = 'date'
 
 class CompetitionForm(forms.ModelForm):
+    date = forms.DateField(widget=datewidget(), input_formats = settings.DATE_INPUT_FORMATS)
     class Meta:
         model = Competition
         fields = [
@@ -52,17 +56,48 @@ class CompetitionForm(forms.ModelForm):
         ]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['date'].widget.attrs.update({'type': 'date', 'class': 'form-control kostyl', 'id':"date", 'name':"date", 'placeholder':"Дата"})
+        self.fields['date'].widget.attrs.update({'class': 'form-control kostyl', 'id':"date", 'name':"date", 'placeholder':"Дата"})
         self.fields['place'].widget.attrs.update({'class': 'form-control'})
         self.fields['sport'].widget.attrs.update({'class': 'form-control'})
 
+
+#форма для добавления вида спорта
+class Sport_adding_form(forms.ModelForm):
+    class Meta:
+        model = Sport
+        fields = [
+            'name',
+            'type'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['type'].widget.attrs.update({'class': 'form-control'})
+
+
+#форма для добавления места проведения
+class Place_adding_form(forms.ModelForm):
+    class Meta:
+        model = Place
+        fields = [
+            'name',
+            'address'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['address'].widget.attrs.update({'class': 'form-control'})
+
+
 class JudgeForm(forms.ModelForm):
 
-    class Meta():
+    class Meta:
         model = CompetitionJudge
         fields =[
             'judge',
-            'judge_position',
+            'judge_position'
         ]
 
     def __init__(self, *args, **kwargs):

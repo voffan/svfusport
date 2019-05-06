@@ -7,9 +7,8 @@
     <div class="row">
       <div class="col-2 padd-left padd-top">
         <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary btn-block">Добавить соревнование</a>
-        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary btn-block">Копировать соревнования</a>
-        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary btn-block">Удалить соревнования</a>
-        <a href="{% url 'sport:competitioncreate' %}" class="btn btn-primary btn-block">Закрыть  соревнования</a>
+        <a href="{% url 'sport:sportadding' %}" class="btn btn-primary btn-block">Добавить вид спорта</a>
+        <a href="{% url 'sport:placeadding' %}" class="btn btn-primary btn-block">Добавить место проведения</a>
       </div>
       <div class="col-9">
         <script id="template" type="text/template">
@@ -24,11 +23,12 @@
                 </div>
               </div>
             </div>
-            <div class="flex">
-              <th style="width: 3%"><input type="checkbox" name="" value="" class="all" data-id="d1"></th>
+            <div class="flex top-bar-competition bg-dark">
+              <input type="checkbox" name="" value="" class="all top-bar-competition-chek" data-id="d1">
               <div class="showhide-div" id="showhide-div">
-                <th style="width: 3%">Удалить</th>
-                <th style="width: 3%" >Отметить</th>
+                <input type="submit" name="delete-competition" class="btn btn-primary top-bar-competition-btn" value="Удалить">
+                <input type="submit" name="close-competition" class="btn btn-primary top-bar-competition-btn" value="Закрыть">
+                <input type="submit" name="copy-competition" class="btn btn-primary top-bar-competition-btn" value="Скопировать">
               </div>
             </div>
             <div class="scroll">
@@ -65,6 +65,7 @@
         var groupId = $(this).data('id');
         var allChecked = $('.one[data-id="' + groupId + '"]:not(:checked)').length == 0;
         $('.all[data-id="' + groupId + '"]').prop("checked", allChecked);
+        $('.all[data-id="' + groupId + '"]').prop("checked")
       });
     });
     $( ".all" ).change(function() {

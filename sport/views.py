@@ -8,8 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRe
 from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge, TeamMember, Competition_name
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
-from django.template.context_processors import csrf
-from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form, TeamResult_form, TeamResult_form_competition
+from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form, TeamResult_form, TeamResult_form_competition, Sport_adding_form, Place_adding_form
 from django.forms import modelformset_factory, inlineformset_factory, formset_factory, modelform_factory
 from django import forms
 import json
@@ -87,7 +86,6 @@ def competitionedit(request, competition_id):
             if form.is_valid():
                 try:
                     new_competition = form.save()
-                    form.save()
                     formj = form_judge(request.POST)
                     if formj.is_valid():
                         instances = formj.save(commit=False)
@@ -104,6 +102,21 @@ def competitionedit(request, competition_id):
                     args['save_error']=str(e)
                     return  render(request, 'sport/competitiondEdit.html', args)
             return redirect("sport:competition")
+        if request.POST['button']=='copy':
+            if form.is_valid():
+                try:
+                    copy_competition = form.save(commit=False)
+                    copy_competition.pk = None
+                    copy_competition.save()
+                    print(copy_competition.pk)
+                    return redirect (reverse('sport:competitionedit', args=[copy_competition.pk]), {
+                        'form': CompetitionForm(instance = copy_competition),
+                        'formset': formset,
+                        'copy': 'редактирование копии'
+                        })
+                except Exception as e:
+                    args['save_error']=str(e)
+                    return  render(request, 'sport/competitiondEdit.html', args)
         if request.POST['button']=='delete':
             Competition.objects.filter(id=competition_id).delete()
             return redirect("sport:competition")
@@ -113,35 +126,6 @@ def competitionedit(request, competition_id):
         'name': name
         })
 
-
-'''
-def competitionedit(request, competition_id):
-    competition = Competition.objects.get(pk = competition_id)
-    judge = CompetitionJudge.objects.filter(compititi   on__id = competition_id).first()
-    form_judge = inlineformset_factory(Competition, CompetitionJudge, fields=('judge','judge_position'))
-    if request.method == 'POST':
-        form = CompetitionForm(request.POST, instance=competition)
-        formset = form_judge(request.POST, instance = competition)
-        args={}
-        if request.POST['button']=='save':
-            if form.is_valid():
-                try:
-                    form.save()
-                    formset.instance.competition = form.instance
-                    formset.save()
-                except Exception as e:
-                    args['save_error']=str(e)
-                    return  render(request, 'sport/competitiondEdit.html', args)
-            return redirect("sport:competition")
-        if request.POST['button']=='delete':
-            Competition.objects.filter(id=competition_id).delete()
-            return redirect("sport:competition")
-    formset = form_judge(instance = competition)
-    return render(request, 'sport/competitiondEdit.html', {
-        'form': CompetitionForm(instance = competition),
-        'formset': form_judge
-        })
-'''
 
 def competitioncreate(request):
     args={}
@@ -173,6 +157,29 @@ def competitioncreate(request):
         })
 
 
+#добавление втда спорта
+def sport_adding(request):
+    form = Sport_adding_form()
+    if request.POST:
+        forms = Sport_adding_form(request.POST)
+        forms.save()
+        return redirect("sport:competition")
+    return render(request, "sport/addform.html", {
+        'form':form,
+        'whatweadding':'вида спорта'
+    })
+
+#добавление места проведения
+def place_adding(request):
+    form = Place_adding_form()
+    if request.POST:
+        forms = Place_adding_form(request.POST)
+        forms.save()
+        return redirect("sport:competition")
+    return render(request, "sport/addform.html", {
+        'form':form,
+        'whatweadding':'места проведения'
+    })
 
 
 '''функции изменения Team'''

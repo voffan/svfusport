@@ -117,8 +117,28 @@
 .flex{
   display: flex;
 }
+.top-bar-competition{
+  border-radius: 5px;
+  height: 30px;
+}
+.top-bar-competition-btn{
+  height: 25px;
+  font-size: 16px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-left: 2px;
+}
+.top-bar-competition-btn value{
+  padding-top: 0px;
+  margin-top: 0px;
+}
+.top-bar-competition-chek{
+  margin-top: 9px;
+  margin-left: 6px;
+  margin-right: 6px;
+}
 .scroll{
-  height: 74vh;
+  height: 72vh;
   overflow-y: scroll;
 }
 .scroll-80{
