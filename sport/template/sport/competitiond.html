@@ -26,7 +26,7 @@
             <div class="flex top-bar-competition bg-dark">
               <input type="checkbox" name="" value="" class="all top-bar-competition-chek" data-id="d1">
               <div class="showhide-div" id="showhide-div">
-                <input type="submit" name="delete-competition" class="btn btn-primary top-bar-competition-btn" value="Удалить">
+                <input type="submit" name="delete-competition" class="btn btn-primary top-bar-competition-btn" value="Удалить" onclick="checkchekboxes()">
                 <input type="submit" name="close-competition" class="btn btn-primary top-bar-competition-btn" value="Закрыть">
                 <input type="submit" name="copy-competition" class="btn btn-primary top-bar-competition-btn" value="Скопировать">
               </div>
@@ -76,6 +76,24 @@
          $("#showhide-div").hide();
        };
     });
+
+    function checkchekboxes() {
+      var data1=[];
+      $('input:checkbox:checked').each(function() {
+        data1.push($(this).attr("id"));
+      });
+      console.log(data1);
+      $.ajax({
+        url: "{% url 'sport:competition' %}",
+        data: {
+          data1,
+          'operation':'delete',
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        method: "post",
+      })
+    }
+
   </script>
 {% else %}
   <div class="container">

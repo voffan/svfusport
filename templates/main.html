@@ -79,6 +79,32 @@
         </div>
       {% endfor %}
     </div>
+      <div class="pagination container">
+          <div class="col-2">
+          </div>
+          <div class="col-8 d-flex flex-row justify-content-center">
+            {% if competition.has_previous %}
+              <a class="btn btn-dark" href="?page=1">В начало</a>
+              <a class="btn btn-dark" href="?page={{ competition.previous_page_number }}">Назад</a>
+            {% endif %}
+
+            {% for num in competition.paginator.page_range %}
+              {% if competition.number == num %}
+              <span class="pagination-current">{{ num }}</span>
+              {% elif num > competition.number|add:'-3' and num < competition.number|add:'3' %}
+              <a class="" href="?page={{ num }}">{{ num }}</a>
+              {% endif %}
+
+            {% endfor %}
+
+            {% if competition.has_next %}
+              <a class="btn btn-dark" href="?page={{ competition.next_page_number }}">Вперед</a>
+              <a class="btn btn-dark" href="?page={{ competition.paginator.num_pages }}">В конец</a>
+            {% endif %}
+          </div>
+          <div class="col-2">
+          </div>
+    </div>
   </div>
 </div>
 

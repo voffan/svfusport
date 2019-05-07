@@ -66,7 +66,7 @@ events: {
 },
 render: function() {
   //alert(this.model.get('competition_id'));
-  this.$el.html('<td>'+'<input type="checkbox" class="one" data-id="d1" id="checkbox' + this.model.get('id') + '">'+'</td><td>' + this.model.get('id') + '</td><td><a href="' + this.model.get('url') + '">' + this.model.get('sport') + '</a>' + '</td><td>' + this.model.get('date') + '</td><td>' + this.model.get('place') + '</td>');
+  this.$el.html('<td>'+'<input type="checkbox" class="one" data-id="d1" id="' + this.model.get('competition_id') + '">'+'</td><td>' + this.model.get('id') + '</td><td><a href="' + this.model.get('url') + '">' + this.model.get('sport') + '</a>' + '</td><td>' + this.model.get('date') + '</td><td>' + this.model.get('place') + '</td>');
   //this.$el.html('<td  style="background: white;">' + this.model.get('id') + '</td><td style="background: white;"><a href="/CM/competitionedit/' + this.model.get('competition_id') + '">' + this.model.get('sport') + '</a>' + '</td><td style="background: white;">' + this.model.get('date') + '</td><td style="background: white;">' + this.model.get('place') + '</td>');
       return this;
 }

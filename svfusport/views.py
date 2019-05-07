@@ -5,6 +5,7 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from sport.models import Competition
 from datetime import datetime, date
+from django.core.paginator import Paginator
 
 def index(request):
     args={}
@@ -12,6 +13,9 @@ def index(request):
     #args['competition'] = Competition.objects.all()
     data = Competition.objects.all().order_by("-date")
     args['competition_5'] = data[:5]
-    args['competition'] = data
-    print(data)
+    #args['competition'] = data
+    paginator = Paginator(data, 5)
+    page = request.GET.get('page')
+    args['competition'] = paginator.get_page(page)
+    #print(data)
     return render(request, 'main.html', args)

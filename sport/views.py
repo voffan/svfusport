@@ -15,6 +15,7 @@ import json
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 
+
 # Create your views here.
 
 def index(request):
@@ -55,6 +56,10 @@ def table_view(request):
     }
     return render(request, 'sport/competition.html', context)
 
+
+#действия со списком соревнований
+#@login_required
+#@permission_reqiured("sport.can_view")
 def competition(request):
     competition = Competition.objects.all()
     json_collection=[]
@@ -68,11 +73,20 @@ def competition(request):
         "place":item.place.name
         })
     args={}
+    args.update(csrf(request))
+    if request.POST:
+        if request.POST["operation"]=="delete":
+            print("пока все норм")
+            data1 = request.POST["data1[]"]
+            print(data1)
+
+
     data=mark_safe(json.dumps(json_collection, ensure_ascii=False))
     args['json_collection'] = data
     return render(request, 'sport/competitiond.html', args)
 
 
+#редактирование соревнования
 def competitionedit(request, competition_id):
     competition = Competition.objects.get(pk = competition_id)
     name = competition.sport.name + "(" + str(competition.date) + ")"
@@ -127,6 +141,7 @@ def competitionedit(request, competition_id):
         })
 
 
+#создание соревнования
 def competitioncreate(request):
     args={}
     args['create'] = 'true'

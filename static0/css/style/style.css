@@ -145,3 +145,14 @@
   height: 80vh;
   overflow-y: scroll;
 }
+.pagination{
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.pagination a{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.pagination-current{
+  font-size: 20px;
+}
