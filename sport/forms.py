@@ -119,9 +119,11 @@ class JudgeForm(forms.ModelForm):
 class TeamMember_Form(forms.ModelForm):
     #team = forms.ModelChoiceField(queryset = Team.objects.all(), empty_label = 'Выберите команду')
 
-    sportsman = forms.ModelChoiceField(queryset = Person.objects.all(), empty_label = 'Выберите спортсмена')
-
-    comments = forms.CharField(max_length = 100)
+    # sportsman = forms.ModelChoiceField(queryset = Person.objects.all(), empty_label = 'Выберите спортсмена',
+    #     widget = forms.Select(attrs = {'id': 'sportsman', 'class': 'form-control', 'aria-describedby': 'manHelp',
+    #                                    'placeholder': 'Выберите спортсмена', 'name': 'sportsman'}))
+    #
+    # comments = forms.CharField(max_length = 100, widget = forms.Select(attrs = {'id':'comments', 'class':'form-control', 'aria-describedby':'commHelp', 'placeholder':'Комментарий', 'name' : 'sportcomment'}))
 
     class Meta:
         model = TeamMember
@@ -129,12 +131,16 @@ class TeamMember_Form(forms.ModelForm):
             'sportsman',
             'comments'
         ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['sportsman'].widget.attrs.update({'class': 'form-control'})
+        self.fields['comments'].widget.attrs.update({'class': 'form-control'})
 
 
 class TeamResult_form(forms.ModelForm):
 
-    team = forms.ModelChoiceField(queryset=Team.objects.all(), empty_label='Выберите команду',
-        widget = forms.Select(attrs = {'id':'team', 'class':'form-control', 'aria-describedby':'teamHelp', 'placeholder':'Выберите команду', 'name' : 'team'}))
+    # team = forms.ModelChoiceField(queryset=Team.objects.all(), empty_label='Выберите команду',
+    #     widget = forms.Select(attrs = {'id':'team', 'class':'form-control', 'aria-describedby':'teamHelp', 'placeholder':'Выберите команду', 'name' : 'team'}))
 
     class Meta:
         model = TeamResult
@@ -144,6 +150,12 @@ class TeamResult_form(forms.ModelForm):
             'points'
         ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['team'].widget.attrs.update({'class': 'form-control'})
+        self.fields['result'].widget.attrs.update({'class': 'form-control'})
+        self.fields['points'].widget.attrs.update({'class': 'form-control'})
+
 
 class TeamResult_form_competition(forms.ModelForm):
     class Meta:
@@ -152,6 +164,9 @@ class TeamResult_form_competition(forms.ModelForm):
             'competition'
         ]
 
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['competition'].widget.attrs.update({'class': 'form-control'})
 #добавление Персон в команду
 
 # class Person_Form(forms.Form):
