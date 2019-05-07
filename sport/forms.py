@@ -119,9 +119,11 @@ class JudgeForm(forms.ModelForm):
 class TeamMember_Form(forms.ModelForm):
     #team = forms.ModelChoiceField(queryset = Team.objects.all(), empty_label = 'Выберите команду')
 
-    sportsman = forms.ModelChoiceField(queryset = Person.objects.all(), empty_label = 'Выберите спортсмена')
-
-    comments = forms.CharField(max_length = 100)
+    # sportsman = forms.ModelChoiceField(queryset = Person.objects.all(), empty_label = 'Выберите спортсмена',
+    #     widget = forms.Select(attrs = {'id': 'sportsman', 'class': 'form-control', 'aria-describedby': 'manHelp',
+    #                                    'placeholder': 'Выберите спортсмена', 'name': 'sportsman'}))
+    #
+    # comments = forms.CharField(max_length = 100, widget = forms.Select(attrs = {'id':'comments', 'class':'form-control', 'aria-describedby':'commHelp', 'placeholder':'Комментарий', 'name' : 'sportcomment'}))
 
     class Meta:
         model = TeamMember
@@ -129,6 +131,10 @@ class TeamMember_Form(forms.ModelForm):
             'sportsman',
             'comments'
         ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['sportsman'].widget.attrs.update({'class': 'form-control'})
+        self.fields['comments'].widget.attrs.update({'class': 'form-control'})
 
 
 class TeamResult_form(forms.ModelForm):

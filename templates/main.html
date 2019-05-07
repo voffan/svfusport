@@ -68,7 +68,7 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="{% url 'sport:competitionedit' item.id %}">Редактировать</a>
-                <a class="dropdown-item" href="#">Подать заявку</a>
+                <a class="dropdown-item" href="{% url 'sport:form-create-view'%}">Подать заявку</a>
                 <a class="dropdown-item" href="{% url 'sport:teamresult' item.id %}">Просмотр результатов</a>
               </div>
             </div>

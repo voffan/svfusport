@@ -4,47 +4,53 @@
 {% block js %} {{ form.media.js }} {% endblock %}
 
 {% block form_change %}
-<h1>Изменить заявку</h1>
-<div class="col-sm">
+        <form method="POST" action="">{% csrf_token %}
 
-    <form method="POST" action="">{% csrf_token %}
+        <div class="row">
+            <div class="col-md-2 padd-top padd-left" >
+                <div class="form-group">
+                    <button type="submit" name="button" value="save" class="btn btn-block btn-dark" style="margin-top: 15px;">Сохранить</button>
+                    <a href="http://localhost:8000/CM/teamtable/" class="btn btn-block btn-dark" value="Таблица заявок" role="button">Таблица заявок</a>
+                </div>
 
-         <div class="form-group row">
-            <label for="sport" class="col-sm-1 col-form-label">Соревнование</label>
-            <div class="col-sm-6">
-                {{ form.competition }}
+            </div>
+
+            <div class="col-md-10 padd-top padd-left">
+
+                <div class="col-md-10 padd-top padd-left" style="border: 2px solid grey; border-radius: 5px; padding: 10px; margin-top: 15px;">
+                <h5>Изменить заявку</h5>
+                 <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Соревнование</label>
+                    <div class="col-sm-6">
+                        {{ form.competition }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Организация</label>
+                    <div class="col-sm-6">
+                        {{ form.organization }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Команда</label>
+                    <div class="col-sm-6">
+                        {{form.name }}
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    {{ form.not_resultable }}
+                    <label class="form-check-label">В зачете</label>
+                </div>
+            </div>
+
+            <div class="col-md-10" style="border: 2px solid grey; border-radius: 5px; padding: 10px; margin-top: 15px;">
+                {% include 'sport/membChange.html' %}
             </div>
         </div>
-
-        <div class="form-group row">
-            <label for="organzation" class="col-sm-1 col-form-label">Организация</label>
-            <div class="col-sm-6">
-                {{ form.organization }}
-            </div>
         </div>
+        </form>
 
-        <div class="form-group row">
-            <label for="team" class="col-sm-1 col-form-label">Команда</label>
-            <div class="col-sm-6">
-                {{form.name }}
-            </div>
-        </div>
-
-        <div class="form-check">
-            {{ form.not_resultable }}
-            <label for="zach1" class="form-check-label">В зачете</label>
-        </div>
-
-        <div>
-            <button type="submit" value="Сохранить" class="btn btn-success">Сохранить</button>
-            <a href="http://localhost:8000/CM/teamtable/" class="btn btn-success" value="Таблица заявок" role="button">Таблица заявок</a>
-        </div>
-
-        <div>
-
-        </div>
-        {% include 'sport/membChange.html' %}
-    </form>
-
-</div>
 {% endblock %}
