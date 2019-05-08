@@ -59,6 +59,7 @@ class CompetitionForm(forms.ModelForm):
         self.fields['date'].widget.attrs.update({'class': 'form-control kostyl', 'id':"date", 'name':"date", 'placeholder':"Дата"})
         self.fields['place'].widget.attrs.update({'class': 'form-control'})
         self.fields['sport'].widget.attrs.update({'class': 'form-control'})
+        self.fields['result'].widget.attrs.update({'style':'margin-right: 10px; padding-top: 25px;'})
 
 
 #форма для добавления вида спорта

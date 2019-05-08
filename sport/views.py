@@ -61,27 +61,49 @@ def table_view(request):
 #@login_required
 #@permission_reqiured("sport.can_view")
 def competition(request):
-    competition = Competition.objects.all()
-    json_collection=[]
-    for i, item in enumerate(competition):
-        json_collection.append({
-        "competition_id": str(item.id),
-        "url": reverse('sport:competitionedit', args=[item.id]),
-        "id": str(i+1),
-        "sport": item.sport.name,
-        "date": str(item.date),
-        "place":item.place.name
-        })
+    def json_filling():
+        competition = Competition.objects.all()
+        json_collection=[]
+        for i, item in enumerate(competition):
+            json_collection.append({
+            "competition_id": str(item.id),
+            "url": reverse('sport:competitionedit', args=[item.id]),
+            "id": str(i+1),
+            "sport": item.sport.name,
+            "date": str(item.date),
+            "place":item.place.name
+            })
+        return json_collection
     args={}
     args.update(csrf(request))
     if request.POST:
-        if request.POST["operation"]=="delete":
-            print("пока все норм")
-            data1 = request.POST["data1[]"]
-            print(data1)
+        data = json.loads(request.POST.get('datajson'))
+        if request.POST["operation"]=="delete-competition":
+            for item in data:
+                Competition.objects.filter(id=item).delete()
+        if request.POST["operation"]=="copy-competition":
+            for item in data:
+                competition_data = Competition.objects.get(id=item)
+                competition_save = Competition(
+                    date = competition_data.date,
+                    place = competition_data.place,
+                    sport = competition_data.sport,
+                    result = False
+                )
+                competition_save.save()
+        if request.POST["operation"]=="close-competition":
+            for item in data:
+                competition_data = Competition.objects.get(id=item)
+                competition_data.result = True
+                competition_data.save()
+                print("OK")
+            return redirect("sport:competition")
+        #data_json=mark_safe(json.dumps(json_filling(), ensure_ascii=False))
+        #args['json_collection'] = data_json
+        #return render(request, 'sport/competitiond.html', args)
+        return redirect("sport:competition")
 
-
-    data=mark_safe(json.dumps(json_collection, ensure_ascii=False))
+    data=mark_safe(json.dumps(json_filling(), ensure_ascii=False))
     args['json_collection'] = data
     return render(request, 'sport/competitiond.html', args)
 
@@ -174,11 +196,12 @@ def competitioncreate(request):
 
 #добавление втда спорта
 def sport_adding(request):
+    request_url = request.GET.get("next")
     form = Sport_adding_form()
     if request.POST:
         forms = Sport_adding_form(request.POST)
         forms.save()
-        return redirect("sport:competition")
+        return redirect(request_url)
     return render(request, "sport/addform.html", {
         'form':form,
         'whatweadding':'вида спорта'
@@ -186,11 +209,12 @@ def sport_adding(request):
 
 #добавление места проведения
 def place_adding(request):
+    request_url = request.GET.get("next")
     form = Place_adding_form()
     if request.POST:
         forms = Place_adding_form(request.POST)
         forms.save()
-        return redirect("sport:competition")
+        return redirect(request_url)
     return render(request, "sport/addform.html", {
         'form':form,
         'whatweadding':'места проведения'
