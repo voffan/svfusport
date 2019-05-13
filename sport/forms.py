@@ -56,9 +56,9 @@ class CompetitionForm(forms.ModelForm):
         ]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['date'].widget.attrs.update({'class': 'form-control kostyl', 'id':"date", 'name':"date", 'placeholder':"Дата"})
-        self.fields['place'].widget.attrs.update({'class': 'form-control'})
-        self.fields['sport'].widget.attrs.update({'class': 'form-control'})
+        self.fields['date'].widget.attrs.update({'class': 'form-control', 'id':"date", 'name':"date", 'placeholder':"Дата"})
+        self.fields['place'].widget.attrs.update({'class': 'form-control input-form-edit'})
+        self.fields['sport'].widget.attrs.update({'class': 'form-control input-form-edit'})
         self.fields['result'].widget.attrs.update({'style':'margin-right: 10px; padding-top: 25px;'})
 
 

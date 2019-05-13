@@ -25,25 +25,45 @@
               <div class="scroll">
                 <div class="form-group" style="border: 2px solid grey; border-radius: 5px; padding: 10px; margin-top: 15px;" >
                     <h5>Основные атрибуты соревнования</h5>
-                    {{ form.date.errors }}
-                    <label for="{{ form.date.id_for_label }}">Дата проведения:</label>
-                    {{ form.date }}
-                    {{ form.place.errors }}
-                    <label for="{{ form.place.id_for_label }}">Место проведения:</label>
-                    {{ form.place }}
-                    <a href="{% url 'sport:placeadding' %}?next={{ request.path }}">
-                      <span class="glyphicon glyphicon-plus"></span>Добавить
-                    </a><br>
-                    {{ form.sport.errors }}
-                    <label for="{{ form.sport.id_for_label }}">Вид спорта:</label>
-                    {{ form.sport }}
-                    <a href="{% url 'sport:sportadding' %}?next={{ request.path }}">
-                      <span class="glyphicon glyphicon-plus"></span>Добавить
-                    </a><br>
-                    {{ form.result.errors }}
-                    <label for="{{ form.result.id_for_label }}">Мероприятие проведено:  </label>
-                    {{ form.result }}<br>
-                    <label style="font-size: 15px; color: grey; margin-top: 0px;">Поставьте галочку если проведено</label>
+                    <div class="form-group">
+                      {{ form.date.errors }}
+                      <label for="{{ form.date.id_for_label }}">Дата проведения:</label>
+                      {{ form.date }}
+                      {{ form.place.errors }}
+                    </div>
+                    <div class="form-group">
+                      <label for="{{ form.place.id_for_label }}">Место проведения:</label>
+                      <div class="row">
+                        <div class="col-11">
+                          {{ form.place }}
+                        </div>
+                        <div class="col-1">
+                          <a href="{% url 'sport:placeadding' %}?next={{ request.path }}">
+                            <i class="fa fa-plus add-plus" aria-hidden="true"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      {{ form.sport.errors }}
+                      <label for="{{ form.sport.id_for_label }}">Вид спорта:</label>
+                      <div class="row">
+                        <div class="col-11">
+                          {{ form.sport }}
+                        </div>
+                        <div class="col-1">
+                          <a href="{% url 'sport:sportadding' %}?next={{ request.path }}">
+                            <i class="fa fa-plus add-plus" aria-hidden="true"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      {{ form.result.errors }}
+                      <label for="{{ form.result.id_for_label }}">Мероприятие проведено:  </label>
+                      {{ form.result }}<br>
+                      <label style="font-size: 15px; color: grey; margin-top: 0px;">Поставьте галочку если проведено</label>
+                    </div>
                   </div>
                     <div class="form-group" id="judge_div" style="border: 2px solid grey; border-radius: 5px; padding: 10px;" >
                       <h5>Судьи</h5>

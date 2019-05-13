@@ -156,3 +156,7 @@
 .pagination-current{
   font-size: 20px;
 }
+.add-plus{
+  margin-top: 10px;
+  margin-left: -20px;
+}

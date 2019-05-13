@@ -14,6 +14,7 @@ from django import forms
 import json
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 # Create your views here.
@@ -58,8 +59,11 @@ def table_view(request):
 
 
 #действия со списком соревнований
-#@login_required
-#@permission_reqiured("sport.can_view")
+@login_required()
+@permission_required("competition.can_delete")
+@permission_required("competition.can_change")
+@permission_required("competition.can_add")
+@permission_required("competition.can_view")
 def competition(request):
     def json_filling():
         competition = Competition.objects.all()
@@ -75,6 +79,10 @@ def competition(request):
             })
         return json_collection
     args={}
+    if request.method == 'GET':
+        data=mark_safe(json.dumps(json_filling(), ensure_ascii=False))
+        args['json_collection'] = data
+        return render(request, 'sport/competitiond.html', args)
     args.update(csrf(request))
     if request.POST:
         data = json.loads(request.POST.get('datajson'))
@@ -97,15 +105,13 @@ def competition(request):
                 competition_data.result = True
                 competition_data.save()
                 print("OK")
-            return redirect("sport:competition")
+            #return render(request, 'sport/competitiond.html', args)
         #data_json=mark_safe(json.dumps(json_filling(), ensure_ascii=False))
         #args['json_collection'] = data_json
         #return render(request, 'sport/competitiond.html', args)
-        return redirect("sport:competition")
+        #return redirect("sport:competition")
 
-    data=mark_safe(json.dumps(json_filling(), ensure_ascii=False))
-    args['json_collection'] = data
-    return render(request, 'sport/competitiond.html', args)
+
 
 
 #редактирование соревнования
@@ -144,7 +150,6 @@ def competitionedit(request, competition_id):
                     copy_competition = form.save(commit=False)
                     copy_competition.pk = None
                     copy_competition.save()
-                    print(copy_competition.pk)
                     return redirect (reverse('sport:competitionedit', args=[copy_competition.pk]), {
                         'form': CompetitionForm(instance = copy_competition),
                         'formset': formset,
