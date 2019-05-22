@@ -1,0 +1,32 @@
+{% extends "sport/index.html" %}
+{% block competitions_result %}
+<div class="container-fluid" style="min-height: 82vh;">
+  <div class="row">
+    <div class="col-2 padd-left padd-top">
+      <form class="" action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="date-pick">Сроки проведения соревнования</label>
+          <div class="form-group">
+            <input type="date" name="date-begin" value="" class="form-control" placeholder=С...>
+          </div>
+          <div class="form-group">
+            <input type="date" name="date-end" value="" class="form-control" placeholder="По...">
+          </div>
+          <div class="form-group">
+            <input type="submit" name="submit" value="Сформировать" class="btn btn-block btn-primary">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-9">
+        <h3 class="padd-top-competition">Результаты спартакиады</h3>
+        <div class="">
+          {% for item in competition %}
+          <p>{{ item.sport.name }} ({{ item.date }})</p>
+          {% endfor %}
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

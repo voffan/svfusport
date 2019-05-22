@@ -31,6 +31,7 @@ urlpatterns = [
     path('sportadd', views.sport_adding, name="sportadding"),
     path('placeadd', views.place_adding, name="placeadding"),
     path('competitioncreate', views.competitioncreate, name="competitioncreate"),
+    path('competitionresult', views.competitions_result, name="competitionsresult"),
     #path('team_member_process', views.team_member, name='team_member'),
     #path('change/<int:id>/chan/', views.changelink, name="change-link"),
 ]
