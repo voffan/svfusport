@@ -7,8 +7,6 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style/style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-social.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}">
     <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script><link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -49,7 +47,22 @@
   {% block result_change %}
   {% endblock %}
 
+  {% block teamtable_result %}
+  {% endblock %}
+
+  {% block RESULT %}
+  {% endblock %}
+
+  {% block grandTable %}
+  {% endblock %}
+
+  {% block uchp_add %}
+  {% endblock %}
+
   {% block js %}
+  {% endblock %}
+
+  {% block tmember_table %}
   {% endblock %}
 
   {% block edit %}
@@ -63,5 +76,4 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>
-  {% include "footer.html" %}
 </html>

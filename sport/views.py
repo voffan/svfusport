@@ -5,10 +5,10 @@ from django.db import IntegrityError
 from django.contrib import auth
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
-from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge, TeamMember, Competition_name
+from sport.models import Sport, Period, Team, Place, TeamResult, Competition, Judge, Person, CompetitionJudge, TeamMember, Competition_name, Department
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
-from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form, TeamResult_form, TeamResult_form_competition, Sport_adding_form, Place_adding_form
+from .forms import CompetitionForm, JudgeForm, TeamForm, TeamMember_Form, TeamResult_form, TeamResult_form_competition, Sport_adding_form, Place_adding_form, Period_for_Table_Form, Uchp_adding_form
 from django.forms import modelformset_factory, inlineformset_factory, formset_factory, modelform_factory
 from django import forms
 import json
@@ -33,7 +33,8 @@ def sport_view(request):
 
 ''' показать все таблицу заявок'''
 def teamtable(request):
-    teams = Team.objects.all()
+
+    teams = Team.objects.all().order_by('competition')
     context={
         'teams': teams,
     }
@@ -341,7 +342,7 @@ def member_change_view(request, id):
 
     context = {}
     form2 = TeamMember_Form(request.POST)
-    change_member = modelformset_factory(TeamMember, form=TeamMember_Form, can_delete = True, extra = 3)
+    change_member = modelformset_factory(TeamMember, form=TeamMember_Form, can_delete = True, extra = 0)
     formset = change_member(queryset = TeamMember.objects.none)
     if request.method == 'POST':
         form2 = TeamMember_Form(request.POST)
@@ -386,7 +387,7 @@ def member_create_view(request):
     #team = TeamMember.objects.get(pk = id)
     #Smemberteam = TeamMember.objects.filter(team_id = id).first()
     form1 = TeamMember_Form(request.POST)
-    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete=True, extra=3)
+    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete=True, extra=6)
     formset = form_member(queryset = TeamMember.objects.none())
     if request.method == 'POST':
         formset = form_member(request.POST)
@@ -476,6 +477,19 @@ def result_team(request, competition_id):
     return render(request, 'sport/ResultTeam.html', context)
 
 
+''' Результаты соревнования все'''
+def result_other(request):
+
+    zachot = Team.objects.filter(not_resultable = 1)
+    #print(zachot)
+    teamRes = TeamResult.objects.filter(team__in = zachot).order_by('competition')
+
+    context = {
+        'teamRes': teamRes,
+    }
+    return render(request, 'sport/ResultTeam.html', context)
+
+
 ''' Задать результаты'''
 def create_result_team(request):
     context = {}
@@ -504,21 +518,102 @@ def create_result_team(request):
     return render(request, 'sport/createResult.html', context)
 
 
+def table_referee(request, competition_id):
+    comp = Competition.objects.get(pk=competition_id)
+    team = Team.objects.filter(competition__exact = competition_id)
+    team_results = TeamResult.objects.filter(competition__id=comp.id)
+
+    print(team.count())
+    print(len(team_results))
+
+    if len(team_results) < len(team):
+        teams = set(team.values_list('id', flat=True)) - set(team_results.values_list('team__id', flat=True))
+        for t in Team.objects.filter(id__in=teams):
+            tr = TeamResult()
+            tr.competition = comp
+            tr.team = t
+            tr.points = 0
+            tr.result = 0
+            tr.save()
+        team_results = TeamResult.objects.filter(competition__id=comp.id)
+
+    team_name = modelformset_factory(TeamResult, form = TeamResult_form, extra=0)
+    formset = team_name(queryset=team_results)
+    print(team)
+    print(comp)
+    context = {}
+    if request.method == 'POST':
+        formset = team_name(request.POST)
+        if formset.is_valid():
+            try:
+                for item in formset:
+
+                    result = item.save(commit = False)
+                    print(result.points)
+                    print(result.result)
+                    result.result = result.points
+                    result = item.save()
+
+                    if result.points == 0:
+                        result.points = team.count()
+                        result.result = result.points
+                        result = item.save()
+            except:
+                return HttpResponse('Errorss!!')
+        return HttpResponseRedirect('/CM/teamresult/')
+    context['formset'] = formset
+    context['competition'] = comp
+    return render(request, 'sport/Results.html', context)
 
 
+'''все-общая таблица результатов соревнования'''
+def grand_table(request):
+    if 'begin' in request.GET:
+        begin = request.GET['begin']
+        end = request.GET['end']
+    else:
+        period = Period.objects.all().latest('end')
+        begin = period.begin
+        end = period.end
+    table = {}
+    competitions = Competition.objects.select_related('sport').filter(date__range=[begin, end], result=True).order_by('date')
+    deps = Department.objects.all()
+    for d in deps:
+        s = 0
+        table[d.name] = []
+        team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True).values_list('competition__id', 'result'))
+        for comp in competitions:
+            table[d.name].append(team_results[comp.id] if comp.id in team_results.keys() else len(TeamResult.objects.filter(competition__id=comp.id)) + 1)
+            s += table[d.name][-1]
+        table[d.name].append(s)
+    table = sorted(table.items(), key=lambda x: x[1][-1])
+    place = 0
+    prev = 0
+    for item in table:
+        if item[1][-1] > prev:
+            place += 1
+        prev = item[1][-1]
+        item[1].append(place)
+    return render(request, 'sport/grandTable.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
 
 
-
-
-
-
+'''Добавить УЧП'''
+def uchp_add(request):
+    request_url = request.GET.get("next")
+    form = Uchp_adding_form()
+    if request.POST:
+        forms = Uchp_adding_form(request.POST)
+        forms.save()
+        return redirect(request_url)
+    return render(request, "sport/uchp.html", {
+        'form':form,
+        'whatweadding': 'УЧП'
+    })
 
 # декоратор POST - 1 это обеспечение POST запросов
 # декоратор Ajax_require - 2 для совмещения работы Django с Ajax(чтобыне дать Ajax свободы действий)
 
 def ajax_required(f):
-
-
     def wrap(request, *args, **kwargs):
        if not request.is_ajax():
            return HttpResponseBadRequest()
@@ -527,7 +622,6 @@ def ajax_required(f):
     wrap.__doc__=f.__doc__
     wrap.__name__=f.__name__
     return wrap
-
 #@ajax_required
 #@csrf_exempt
 def member_team(request):
@@ -552,8 +646,29 @@ def member_team(request):
             #         'members': members,
             #
             #     })
-
-
         return JsonResponse(answer)
-
     return JsonResponse('team_aj') # возврат данных в Ajax
+
+
+# def grand_t(request):
+#
+#
+#
+#     if request.method == 'POST':
+#
+#         answer = dict(teams=[])
+#         if request.is_ajax():
+#             begin = request.POST.get('begin')
+#
+#             if
+#             qs = Team.objects.filter(name__contains=team) if team else Team.objects.all()
+#             for obj in qs:
+#                 members = [{'id': tm.id, 'name': str(tm.sportsman)} for tm in obj.teammember_set.all()]
+#                 answer['teams'].append({
+#                     'id': obj.id,
+#                     'name': obj.name,
+#                     'members': members,
+#                 })
+#         return JsonResponse(answer)
+#
+#     return JsonResponse('team_aj')

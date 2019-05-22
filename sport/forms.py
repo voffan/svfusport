@@ -1,5 +1,5 @@
 from django import forms
-from .models import Team, Sport, Department, Competition, Person, TeamMember, Position, CompetitionJudge, TeamResult,Competition_name, Place
+from .models import Team, Sport, Department, Competition, Person, Period, TeamMember, Position, CompetitionJudge, TeamResult,Competition_name, Place
 #from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, Select2Widget
 import datetime
 from svfusport import settings
@@ -20,7 +20,7 @@ class TeamForm(forms.ModelForm):
     #not_res = forms.BooleanField()
 
 class TeamForm(forms.ModelForm):
-    competition = forms.ModelChoiceField(queryset=Competition.objects.filter(date__lte=datetime.date.today()).order_by('date'), empty_label='Выберите соревнование',
+    competition = forms.ModelChoiceField(queryset=Competition.objects.filter(date__gte=datetime.date.today()).order_by('date'), empty_label='Выберите соревнование',
         widget = forms.Select(attrs = {'id':'sport', 'class':'form-control', 'aria-describedby':'sportHelp', 'placeholder':'Выберите соревнование', 'name' : 'sport'}))
 
     organization = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label='Выберете УЧП',
@@ -156,7 +156,8 @@ class TeamResult_form(forms.ModelForm):
         self.fields['team'].widget.attrs.update({'class': 'form-control'})
         self.fields['result'].widget.attrs.update({'class': 'form-control'})
         self.fields['points'].widget.attrs.update({'class': 'form-control'})
-
+        self.fields['team'].widget.attrs['disabled'] = True
+        self.fields['team'].widget.attrs['required'] = False
 
 class TeamResult_form_competition(forms.ModelForm):
     class Meta:
@@ -168,18 +169,32 @@ class TeamResult_form_competition(forms.ModelForm):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.fields['competition'].widget.attrs.update({'class': 'form-control'})
-#добавление Персон в команду
 
-# class Person_Form(forms.Form):
-#     fio = forms.ModelMultipleChoiceField(queryset = Person.objects.all(),
-#         widget = Select2MultipleWidget)
-#
-#     position = forms.ModelMultipleChoiceField(queryset = Position.objects.all(),
-#         widget = Select2MultipleWidget)
-#
-#     class Meta:
-#         model = Person
-#         fields = [
-#             'fio',
-#             'position'
-#         ]
+
+class Period_for_Table_Form(forms.ModelForm):
+    begin = forms.DateField(widget = datewidget(), input_formats = settings.DATE_INPUT_FORMATS)
+    end = forms.DateField(widget = datewidget(), input_formats = settings.DATE_INPUT_FORMATS)
+    class Meta:
+        model = Period
+        fields = [
+            'begin',
+            'end'
+        ]
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['begin'].widget.attrs.update({'class': 'form-control'})
+            self.fields['end'].widget.attrs.update({'class': 'form-control'})
+
+
+'''Добавить УЧП форма'''
+class Uchp_adding_form(forms.ModelForm):
+    class Meta:
+        model = Department
+        fields = [
+            'name',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'class': 'form-control'})

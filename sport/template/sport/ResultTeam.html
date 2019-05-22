@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Спартакиада СВФУ</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-</head>
-<body class="container">
-
-        <div>
+{% extends "sport/index.html" %}
+{% block teamtable_result %}
+        <div class="container">
             <table class="table table-hover table-bordered table-sm table-justified">
                 <thead class="active thead-light">
                         <th class="table-warning" style="width: 4%">№</th>
                         <th style="width: 20%">Соревнование</th>
                         <th style="width: 20%">Команда</th>
-                        <th style="width: 20%">Место</th>
                         <th style="width: 20%">Очки</th>
+                        <th style="width: 20%">Место</th>
                         <!--<th style="width: 10%">Управление</th>-->
                 </thead>
                 <tbody>
@@ -26,25 +17,9 @@
 
                             <td>{{ forloop.counter }}</td>
                             {% ifchanged %}<td>{{t.competition}}</td>{% else %}<td></td>{% endifchanged %}
-
-                                <td>{{t.team}}</td>
-                                <td>{{t.result}} </td>
-                                <td>{{t.points}}</td>
-
-                            <!--<td>-->
-
-                                <!--<div class="dropdown">-->
-                                    <!--<a class="btn btn-light dropdown-toggle-none" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                        <!--Операции-->
-                                    <!--</a>-->
-                                    <!--<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">-->
-                                        <!--<a class="dropdown-item" onclick="location.href='/CM/teamtable/{{t.id}}/change/'">Изменить заявку</a>-->
-                                        <!--<a class="dropdown-item" href="/CM/create/">Подать заявку</a>-->
-                                        <!--<a class="dropdown-item" onclick="location.href='/CM/teamtable/{{t.id}}/teamremove/'">Удалить заявку</a>-->
-                                  <!--</div>-->
-                                <!--</div>-->
-                            <!--</td>-->
-
+                            <td>{{t.team}}</td>
+                            <td>{{t.points}}</td>
+                            <td>{{t.result}} </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -56,6 +31,4 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-
-</body>
-</html>
+{% endblock %}

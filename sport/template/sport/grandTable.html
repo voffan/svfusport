@@ -1,0 +1,65 @@
+{% extends "sport/index.html" %}
+{% block css %} {{ form.media.css }}{% endblock %}
+{% block js %} {{ form.media.js }} {% endblock %}
+
+{% block grandTable %}
+<form method="GET" class="align-self-center">
+
+    <div class="row">
+
+        <div class="col-3 padd-top padd-left" style=" height: 100vh; ">
+
+            <div class="form-group row">
+                <label class="col-sm-3">Начало</label>
+                <div class="col-sm-6">{{ form.begin }}</div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-3">Конец</label>
+                <div class="col-sm-6">{{ form.end }}</div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" name="button" id="button" class="btn btn-block btn-dark" style="margin-top: 15px;">Сформировать</button>
+            </div>
+        </div>
+
+        <div class="col-md-8 padd-top" style="border: 2px solid grey; border-radius: 5px; padding: 10px; margin-top: 15px;">
+<h5>Общие результаты соревнования</h5>
+<table id="table" class="table table-hover table-bordered table-sm table-justified">
+        <thead class="active thead-light">
+                <th class="table-warning" style="width: 1%">№</th>
+                <!--<th style="width: 20%">Соревнование</th>-->
+                <th style="width: 7%">УЧП</th>
+                {% for f in daten %}
+                <th style="width: 10%">{{ f.sport.name }}</th>
+                {% endfor %}
+                <th style="width: 7%">Итог</th>
+                <th style="width: 7%">Место</th>
+        </thead>
+        <tbody>
+
+            {% for key,value in grand_table.items %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ key }}</td>
+                {% for points in value %}
+                <td>{{ points }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+</table>
+</div>
+
+    </div>
+</form>
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!--{% load static %}-->
+<!--<script type="text/javascript" src="{% static 'my_js/grand_table.js' %}"></script>-->
+{% endblock %}
