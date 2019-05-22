@@ -1,0 +1,77 @@
+{% extends "sport/index.html" %}
+{% block css %} {{ form.media.css }}{% endblock %}
+
+{% block js %}
+{{ form.media.js }}
+<script>
+$('#results_form').submit(function(e){
+    $('select:disabled').attr('disabled', false);
+    console.log('disabled');
+    return true;
+});
+</script>
+{% endblock %}
+
+{% block RESULT %}
+
+    <form method="POST" action="" id="results_form">{% csrf_token %}
+        {{ formset.management_form }}
+        <div class="row">
+            <div class="col-md-2 padd-top padd-left">
+                <div class="form-group">
+                    <button type="submit" name="button" value="save" class="btn btn-block btn-dark" style="margin-top: 15px;">Сохранить</button>
+                </div>
+            </div>
+
+            <div class="col-md-10 padd-top padd-left">
+                <div class="col-md-10 padd-top padd-left" style="border: 2px solid grey; border-radius: 5px; padding: 10px; margin-top: 15px;">
+
+                <table class="table table-hover table-bordered table-sm table-justified">
+                <thead class="active thead-light">
+                        <th style="width: 20%"><label>Соревнование</label></th>
+                        <th style="width: 10%"><label>Дата проведения</label></th>
+                        <th style="width: 10%"><label>Место проведения</label></th>
+                </thead>
+                <tbody>
+                    <tr>
+                            <td><h3>{{ competition.sport }}</h3></td>
+                            <td><h3>{{ competition.date }}</h3></td>
+                            <td><h3>{{ competition.place }}</h3></td>
+                    </tr>
+                </tbody>
+            </table>
+
+                <h5>Редактировать результаты</h5>
+
+                <table class="table table-hover table-bordered table-sm table-justified">
+                <thead class="active thead-light">
+                        <th class="table-warning" style="width: 4%">№</th>
+                        <!--<th style="width: 20%">Соревнование</th>-->
+                        <th style="width: 20%">Команда</th>
+                        <th style="width: 10%">Очки</th>
+                        <!--<th style="width: 10%">Место</th>-->
+                </thead>
+                <tbody>
+
+                    {% for f in formset %}
+
+                    <tr>
+
+                            <td>{{ forloop.counter }}</td>
+                            <!--{% ifchanged %}<td>{{f.competition}}</td>{% else %}<td></td>{% endifchanged %}-->
+                            <td>{{f.team}} {{f.id}} </td>
+                            <td>{{f.points}}</td>
+                            <!--<td>{{f.result}}</td>-->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                </div>
+            </div>
+        </div>
+    </form>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+{% endblock %}

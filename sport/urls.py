@@ -22,8 +22,12 @@ urlpatterns = [
     path('tmembertable/<int:id>/membremove/', views.member_remove_view, name="member_remove_view"),
     path('memPersAdd/', views.member_create_view, name="member_create_view"),
 
+    path('teamresult/', views.result_other, name="teamresult_other"), # Результаты соревнования
     path('teamresult/<int:competition_id>', views.result_team, name="teamresult"), # Результаты соревнования
     path('teamResultCreate/', views.create_result_team, name="teamResultCreate"), #задать результаты
+    path('Results/<int:competition_id>', views.table_referee, name="table_referee"), #задать судейство соревнованию
+    path('grandTable/', views.grand_table, name="grandTable"), # все-общая таблица результатов соревнования
+    path('uchpadding', views.uchp_add, name="uchp_add"), #добавить УЧП
 
     path('competition/', views.competition, name="competition"),
     #path('table2/', TemplateView.as_view(template_name="sport/competition.html", extra_context={"name": Place.name})),
@@ -31,7 +35,6 @@ urlpatterns = [
     path('sportadd', views.sport_adding, name="sportadding"),
     path('placeadd', views.place_adding, name="placeadding"),
     path('competitioncreate', views.competitioncreate, name="competitioncreate"),
-    path('competitionresult', views.competitions_result, name="competitionsresult"),
     #path('team_member_process', views.team_member, name='team_member'),
     #path('change/<int:id>/chan/', views.changelink, name="change-link"),
 ]
