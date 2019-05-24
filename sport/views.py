@@ -492,7 +492,7 @@ def member_create_view(request):
     return render(request, 'sport/teamadding.html', context)
 
 
-''' Результаты соревнования '''
+''' Результаты соревнования
 def result_team(request, competition_id):
 
     teamRes = TeamResult.objects.filter(competition__id = competition_id).order_by('result')
@@ -501,7 +501,7 @@ def result_team(request, competition_id):
         'teamRes': teamRes,
     }
     return render(request, 'sport/ResultTeam.html', context)
-
+'''
 
 ''' Результаты соревнования все'''
 def result_other(request):
@@ -620,7 +620,7 @@ def grand_table(request):
             place += 1
         prev = item[1][-1]
         item[1].append(place)
-    return render(request, 'sport/grandTable.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
+    return render(request, 'sport/grandTable2.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
 
 
 '''Добавить УЧП'''

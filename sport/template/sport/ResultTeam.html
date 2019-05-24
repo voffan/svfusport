@@ -1,7 +1,7 @@
 {% extends "sport/index.html" %}
 {% block TeamResult %}
 <div class="container" style="min-height: 79.5vh;">
-  <h3>Результаты соревнования: {{ competition_name }}</h3>{{ is_empty }}
+  <h3>Результаты соревнования: {{ competition_name }}</h3>
   {% if is_empty %}
   <p>По данному соревнованию результатов пока нет</p>
   <p>Вернитесь позже</p>
@@ -15,7 +15,6 @@
           <th style="width: 50%">Команда</th>
           <th style="width: 10%">Место</th>
           <th style="width: 10%">Очки</th>
-          <!--<th style="width: 10%">Управление</th>-->
         </tr>
       </thead>
       <tbody>
