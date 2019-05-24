@@ -1,7 +1,20 @@
-<h5>Добавить в команду</h5>
-<div class="col-sm">
-        {{ formset.management_form }}
-        {% for f1 in formset %}
-            {{ f1.as_p }}
-        {% endfor %}
-</div>
+  <div class="container-fluid">
+    <div class="form-group" id="sportsman_div" style="border: 2px solid grey; border-radius: 5px; padding: 10px;" >
+      <h5>Спортсмены</h5>
+
+            {{ formset.management_form }}
+            {% for form in formset %}
+            <!--<h6>Судья №{{ formset.count }}</h6>-->
+            <div class="form-group count {{ form.instance.id }}" id="forclone" style="border: 2px solid grey; border-radius: 5px; padding: 10px;">
+              {{ form.as_table}}
+            </div>
+            <!--p class="kostyl" id="kostyl" style="display:none;">{{forloop.counter}}</p>-->
+            {% endfor %}
+
+    </div>
+    <div class="">
+      <button type="button" name="button" class="btn btn-block btn-primary" onclick="showsportsmanform()">Добавить спортсмена</button>
+    </div>
+  </div>
+  {% load static %}
+  <script type="text/javascript" src="{% static 'my_js/sportsman.js' %}"></script>

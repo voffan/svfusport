@@ -234,7 +234,7 @@ def place_adding(request):
 #результаы соревнования
 def result_team(request, competition_id):
     print("test")
-    teamRes = TeamResult.objects.filter(competition__id = competition_id).order_by('result')
+    teamRes = TeamResult.objects.filter(competition__id = competition_id, team__not_resultable=True).order_by('result')
     teamresult ={}
     teamresult['teamresult'] = teamRes
     competition_name = Competition.objects.get(id = competition_id)
@@ -446,7 +446,7 @@ def member_create_view(request):
 
 ''' создать заявку'''
 def form_create_view(request):
-    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True, extra = 3)
+    form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True)
     formset = form_member(queryset = TeamMember.objects.none())
     if request.method == 'POST':
         form = TeamForm(request.POST)
@@ -507,11 +507,11 @@ def result_team(request, competition_id):
 def result_other(request):
 
     zachot = Team.objects.filter(not_resultable = 1)
-    #print(zachot)
-    teamRes = TeamResult.objects.filter(team__in = zachot).order_by('competition')
+    print(zachot)
+    teamresult = TeamResult.objects.filter(team__in = zachot).order_by('competition')
 
     context = {
-        'teamRes': teamRes,
+        'teamRes': teamresult,
     }
     return render(request, 'sport/ResultTeam.html', context)
 
