@@ -518,6 +518,11 @@ def create_result_team(request):
     return render(request, 'sport/createResult.html', context)
 
 
+
+
+'''Судейское решение'''
+@login_required()
+@permission_required("sport.delete_teamresult")
 def table_referee(request, competition_id):
     comp = Competition.objects.get(pk=competition_id)
     team = Team.objects.filter(competition__exact = competition_id)
@@ -551,7 +556,17 @@ def table_referee(request, competition_id):
                     result = item.save(commit = False)
                     print(result.points)
                     print(result.result)
-                    result.result = result.points
+                    # result.result = result.points
+                    # max = 0
+                    # min = 0
+                    # def totals(a=result.points):
+                    #     nonlocal max
+                    #     nonlocal min
+                    #     if max < a:
+                    #         min = max
+                    #         max = a
+
+
                     result = item.save()
 
                     if result.points == 0:
@@ -560,7 +575,13 @@ def table_referee(request, competition_id):
                         result = item.save()
             except:
                 return HttpResponse('Errorss!!')
+
+        if ('close_CM' in request.POST) == True:
+            comp.result = True
+            comp.save()
         return HttpResponseRedirect('/CM/teamresult/')
+
+
     context['formset'] = formset
     context['competition'] = comp
     return render(request, 'sport/Results.html', context)
