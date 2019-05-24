@@ -11,6 +11,7 @@
                 {% if not create %}
                 <button type="submit" name="button" value="copy" class="btn btn-block btn-dark" style="margin-top: 15px;">Копировать</button>
                 <button type="submit" name="button" value="delete" class="btn btn-block btn-dark" style="margin-top: 15px;">Удалить</button>
+                <a href="{% url 'sport:teamresult' competition_id %}?next={{ request.path }}" class="btn btn-block btn-primary" style="margin-top: 15px;">Посмотреть результаты</a>
                 {% endif %}
               </div>
             </div>

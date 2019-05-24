@@ -62,7 +62,7 @@ class Competition(models.Model):
     result = models.BooleanField(verbose_name="Проведено", default = False)
 
     def __str__(self):
-        return self.sport.name + ' : ' + str(self.date)
+        return self.sport.name + '(' + str(self.date) + ')'
 
 
 class Competition_name(models.Model):

@@ -2,10 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5599bc19-27c5-4bc5-b445-2a4c0833ec2b" name="Default" comment="grand fix">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sport/template/sport/competitions_result.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sport/template/sport/grandtable2.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport/template/sport/Results.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/Results.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sport/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sport/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport/template/sport/ResultTeam.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/ResultTeam.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport/template/sport/competitiondEdit.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/competitiondEdit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport/template/sport/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sport/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sport/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/svfusport/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/svfusport/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/header.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,7 +57,7 @@
     <session id="899236238">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="27" />
+          <entry key="project.closed" value="28" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.15" value="1" />
@@ -116,8 +123,8 @@
             <state relative-caret-position="1581">
               <caret line="95" column="6" selection-start-line="95" selection-start-column="6" selection-end-line="95" selection-end-column="6" />
               <folding>
-                <marker date="1558237922858" expanded="true" signature="1973:2111" ph="..." />
-                <marker date="1558237922858" expanded="true" signature="5751:5752" ph="..." />
+                <marker date="1558676987087" expanded="true" signature="1977:2115" ph="..." />
+                <marker date="1558676987087" expanded="true" signature="5755:5756" ph="..." />
               </folding>
             </state>
           </provider>
@@ -141,8 +148,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sport/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="523" column="17" lean-forward="true" selection-start-line="523" selection-start-column="17" selection-end-line="523" selection-end-column="17" />
+            <state relative-caret-position="255">
+              <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -200,7 +207,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-1" />
     <option name="width" value="1365" />
     <option name="height" value="744" />
@@ -366,12 +373,12 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18005952" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18005952" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.25" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39869282" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -700,8 +707,8 @@
         <state relative-caret-position="1581">
           <caret line="95" column="6" selection-start-line="95" selection-start-column="6" selection-end-line="95" selection-end-column="6" />
           <folding>
-            <marker date="1558237922858" expanded="true" signature="1973:2111" ph="..." />
-            <marker date="1558237922858" expanded="true" signature="5751:5752" ph="..." />
+            <marker date="1558676987087" expanded="true" signature="1977:2115" ph="..." />
+            <marker date="1558676987087" expanded="true" signature="5755:5756" ph="..." />
           </folding>
         </state>
       </provider>
@@ -721,8 +728,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sport/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="523" column="17" lean-forward="true" selection-start-line="523" selection-start-column="17" selection-end-line="523" selection-end-column="17" />
+        <state relative-caret-position="255">
+          <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>

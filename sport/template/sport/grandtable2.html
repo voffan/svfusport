@@ -1,0 +1,61 @@
+{% extends "sport/index.html" %}
+{% block grandTable %}
+<form method="GET" class="align-self-center">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2 padd-top padd-left" style="height: 90vh;">
+        <form class="" action="" method="post" id="date-form">
+          <div class="form-group form-inline">
+            <label for="begin">Начало</label>
+            <input type="date" name="begin" value="" class="form-control">
+            <label for="end">Конец</label>
+            <input type="button" id="btn-form" name="end" value="" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="submit" name="отправить" value="Сформировать" class="btn btn-primary btn-block" onclick="report_generation()">
+          </div>
+        </form>
+      </div>
+      <div class="col-9 padd-top">
+        <h3>Результаты спартакиады за период с</h3>
+        <table id="table" class="table table-hover table-bordered table-sm table-justified">
+          <thead class="active thead-light">
+            <th class="table-warning" style="width: 1%">№</th>
+            <!--<th style="width: 20%">Соревнование</th>-->
+            <th style="width: 7%">УЧП</th>
+            {% for f in daten %}
+            <th style="width: 10%">{{ f.sport.name }}</th>
+            {% endfor %}
+            <th style="width: 7%">Итог</th>
+            <th style="width: 7%">Место</th>
+          </thead>
+          <tbody>
+            {% for key,value in grand_table.items %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ key }}</td>
+              {% for points in value %}
+              <td>{{ points }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+<script>
+  function report_generation(){
+    $.ajax({
+      url: "{% url 'sport:grandTable' %}",
+      data: {
+        'data': JSON.stringify(data),
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      method: "POST",
+    })
+  }
+</script>

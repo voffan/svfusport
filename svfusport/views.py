@@ -10,12 +10,9 @@ from django.core.paginator import Paginator
 def index(request):
     args={}
     args['date_now'] = date.today()
-    #args['competition'] = Competition.objects.all()
     data = Competition.objects.all().order_by("-date")
     args['competition_5'] = data[:5]
-    #args['competition'] = data
     paginator = Paginator(data, 5)
     page = request.GET.get('page')
     args['competition'] = paginator.get_page(page)
-    #print(data)
     return render(request, 'main.html', args)

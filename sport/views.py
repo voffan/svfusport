@@ -1,6 +1,5 @@
 import datetime
 from django.template.context_processors import csrf
-from django.db.models import Q
 from django.db import IntegrityError
 from django.contrib import auth
 from django.shortcuts import render, redirect, get_object_or_404
@@ -61,10 +60,7 @@ def table_view(request):
 
 #действия со списком соревнований
 @login_required()
-@permission_required("competition.can_delete")
-@permission_required("competition.can_change")
-@permission_required("competition.can_add")
-@permission_required("competition.can_view")
+@permission_required("sport.delete_competition")
 def competition(request):
     def json_filling():
         competition = Competition.objects.all()
@@ -116,6 +112,8 @@ def competition(request):
 
 
 #редактирование соревнования
+@login_required()
+@permission_required("sport.delete_competition")
 def competitionedit(request, competition_id):
     competition = Competition.objects.get(pk = competition_id)
     name = competition.sport.name + "(" + str(competition.date) + ")"
@@ -165,11 +163,14 @@ def competitionedit(request, competition_id):
     return render(request, 'sport/competitiondEdit.html', {
         'form': CompetitionForm(instance = competition),
         'formset': formset,
-        'name': name
+        'name': name,
+        'competition_id': str(competition.id)
         })
 
 
 #создание соревнования
+@login_required()
+@permission_required("sport.delete_competition")
 def competitioncreate(request):
     args={}
     args['create'] = 'true'
@@ -200,7 +201,9 @@ def competitioncreate(request):
         })
 
 
-#добавление втда спорта
+#добавление витда спорта
+@login_required()
+@permission_required("sport.delete_competition")
 def sport_adding(request):
     request_url = request.GET.get("next")
     form = Sport_adding_form()
@@ -214,6 +217,8 @@ def sport_adding(request):
     })
 
 #добавление места проведения
+@login_required()
+@permission_required("sport.delete_competition")
 def place_adding(request):
     request_url = request.GET.get("next")
     form = Place_adding_form()
@@ -225,6 +230,27 @@ def place_adding(request):
         'form':form,
         'whatweadding':'места проведения'
     })
+
+#результаы соревнования
+def result_team(request, competition_id):
+    print("test")
+    teamRes = TeamResult.objects.filter(competition__id = competition_id).order_by('result')
+    teamresult ={}
+    teamresult['teamresult'] = teamRes
+    competition_name = Competition.objects.get(id = competition_id)
+    if any(teamresult['teamresult']):
+        print("yes")
+        context = {
+            'teamRes': teamresult,
+            'competition_name': competition_name
+        }
+    else:
+        print("no")
+        context = {
+            'is_empty': True,
+            'competition_name': competition_name
+        }
+    return render(request, 'sport/ResultTeam.html', context)
 
 
 '''функции изменения Team'''
@@ -466,7 +492,7 @@ def member_create_view(request):
     return render(request, 'sport/teamadding.html', context)
 
 
-''' Результаты соревнования '''
+''' Результаты соревнования
 def result_team(request, competition_id):
 
     teamRes = TeamResult.objects.filter(competition__id = competition_id).order_by('result')
@@ -475,7 +501,7 @@ def result_team(request, competition_id):
         'teamRes': teamRes,
     }
     return render(request, 'sport/ResultTeam.html', context)
-
+'''
 
 ''' Результаты соревнования все'''
 def result_other(request):
@@ -615,7 +641,7 @@ def grand_table(request):
             place += 1
         prev = item[1][-1]
         item[1].append(place)
-    return render(request, 'sport/grandTable.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
+    return render(request, 'sport/grandTable2.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
 
 
 '''Добавить УЧП'''
