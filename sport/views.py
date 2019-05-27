@@ -362,6 +362,8 @@ def form_change_view(request, id):
 
 
 ''' редактировать спортсмена'''
+@login_required()
+@permission_required("sport.delete_teammember")
 def member_change_view(request, id):
     sportsman = TeamMember.objects.get(pk = id)
     teamMemb = get_object_or_404(TeamMember, id=id)
@@ -408,6 +410,9 @@ def form_create_view(request):
         if form.is_valid() and formset.is_valid():
             try:
                 team = form.save()'''
+
+@login_required()
+@permission_required("sport.delete_teammember")
 def member_create_view(request):
     context = {}
     #team = TeamMember.objects.get(pk = id)
@@ -444,7 +449,10 @@ def member_create_view(request):
     return render(request, 'sport/teamadding.html', context)
 
 
+
 ''' создать заявку'''
+@login_required()
+@permission_required("sport.delete_team")
 def form_create_view(request):
     form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True)
     formset = form_member(queryset = TeamMember.objects.none())
@@ -466,6 +474,8 @@ def form_create_view(request):
 
 
 '''Добавить спортсмена'''
+@login_required()
+@permission_required("sport.delete_teammember")
 def member_create_view(request):
     context = {}
     form1 = TeamMember_Form(request.POST)
