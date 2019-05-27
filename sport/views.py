@@ -335,6 +335,8 @@ def member_remove_view(request, id):
 
 
 '''редактировать Team'''
+@login_required()
+@permission_required("sport.delete_team")
 def form_change_view(request, id):
     team_instance = Team.objects.get(pk = id)
 
