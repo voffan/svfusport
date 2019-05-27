@@ -1,4 +1,4 @@
-import datetime
+import datetime, copy
 from django.template.context_processors import csrf
 from django.db import IntegrityError
 from django.contrib import auth
@@ -587,82 +587,29 @@ def table_referee(request, competition_id):
     context = {}
     total = {}
     if request.method == 'POST':
+        if 'close_CM' in request.POST:
+            comp.result = True
+            comp.save()
         formset = team_name(request.POST)
         if formset.is_valid():
             try:
                 for item in formset:
-                    result = item.save(commit = False)
                     result = item.save()
-            except:
-                return HttpResponse('Errorss!!')
-
-        if ('close_CM' in request.POST) == True:
-            comp.result = True
-            comp.save()
-        team_res = dict(TeamResult.objects.filter(team__in=team).values_list('team__id', 'points').extra(where=['points != result']))
-        count_pesult = len(TeamResult.objects.filter(team__in=team).values_list('team__id', 'points').extra(where=['points != result']))
-        maximum = max(team_res.values())
-        # minimum = min(team_res.values())
-        minimum = 1
-        print(team_res)
-        print(maximum)
-        # print(count_pesult)
-        # dict2 = team_res.copy()
-        for g in team_res:
-
-            for k, v in team_res.items():
-                if v == maximum:
-                    obj = TeamResult.objects.get(team = k)
-                    obj.result = minimum
-                    obj.save()
-                    # dict2.pop(k)
-                    print(obj)
-                    maximum -= 1
-                    minimum += 1
-
-        return HttpResponseRedirect('/CM/teamresult/')
-
-
-    # max = result.points
-    # min = team.count()
-    # if result.points == 0 or result.points == '':
-    #     result.points = team.count()
-    #     result.result = result.points
-    #     result = item.save()
-    # for item in formset:
-    #     result = item.save(commit = False)
-    #
-    #     if result.points == result.points:
-    #         continue
-    #     elif result.points < max:
-    #         result.result = max
-    #         min = result.points
-    #         result = item.save()
-    #     elif result.points > max:
-    #         result.result = min
-    #         min = result.points
-    #         result = item.save()
-    #     elif result.points == max:
-    #         result.result = team.count()
-    #         min = result.points
-    #         result = item.save()
-    #     print(result.points)
-
-    # team_res = dict(TeamResult.objects.filter(team__in=team).values_list('team__id', 'points').extra(where=['points != result']))
-    # maximum = max(team_res.values())
-    # minimum = min(team_res.values())
-    # print(team_res)
-    # print(maximum)
-    # # dict2 = team_res.copy()
-    # for g in team_res:
-    #
-    #     for k, v in team_res.items():
-    #         if v == maximum:
-    #             obj = TeamResult.objects.get(team = k)
-    #             obj.result = minimum
-    #             obj.save()
-    #             # dict2.pop(k)
-    #             print(obj)
+            except Exception:
+                return HttpResponse('Ошибка сохранения очков!!')
+        team_res = TeamResult.objects.filter(competition__id=comp.id, team__not_resultable=True).order_by('-points')
+        try:
+            i = 1
+            prev = team_res.first().points
+            for team_r in team_res:
+                if prev > team_r.points:
+                    i += 1
+                team_r.result = i
+                team_r.save()
+                prev = team_r.points
+        except Exception:
+            return HttpResponse('Ошибка при назначении мест!!')
+        return HttpResponseRedirect(reverse('sport:teamresult', args=[comp.id]))
 
     context['formset'] = formset
     context['competition'] = comp
@@ -684,9 +631,9 @@ def grand_table(request):
     for d in deps:
         s = 0
         table[d.name] = []
-        team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True).values_list('competition__id', 'result'))
+        team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True, points__gt=0).values_list('competition__id', 'result'))
         for comp in competitions:
-            table[d.name].append(team_results[comp.id] if comp.id in team_results.keys() else len(TeamResult.objects.filter(competition__id=comp.id)) + 1)
+            table[d.name].append(team_results[comp.id] if comp.id in team_results.keys() else len(TeamResult.objects.filter(competition__id=comp.id, points__gt=0, team__not_resultable=True)) + 1)
             s += table[d.name][-1]
         table[d.name].append(s)
     table = sorted(table.items(), key=lambda x: x[1][-1])
@@ -697,7 +644,7 @@ def grand_table(request):
             place += 1
         prev = item[1][-1]
         item[1].append(place)
-    return render(request, 'sport/grandTable2.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
+    return render(request, 'sport/grandTable.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
 
 
 '''Добавить УЧП'''
