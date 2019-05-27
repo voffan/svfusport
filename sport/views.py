@@ -631,6 +631,7 @@ def grand_table(request):
     for d in deps:
         s = 0
         table[d.name] = []
+
         team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True, points__gt=0).values_list('competition__id', 'result'))
         for comp in competitions:
             table[d.name].append(team_results[comp.id] if comp.id in team_results.keys() else len(TeamResult.objects.filter(competition__id=comp.id, points__gt=0, team__not_resultable=True)) + 1)
