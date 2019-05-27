@@ -74,6 +74,7 @@ class Team(models.Model):
     organization = models.ForeignKey(Department, verbose_name="Организация", db_index=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name= "Название команды", db_index=True)
     not_resultable = models.BooleanField(verbose_name='В зачете', default=False)
+    approved = models.BooleanField(verbose_name="Утвержден", default=False)
 
     def __str__(self):
         return self.organization.name + ' : команда -- : ' + self.name
