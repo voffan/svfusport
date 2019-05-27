@@ -2,17 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5599bc19-27c5-4bc5-b445-2a4c0833ec2b" name="Default" comment="grand fix">
-      <change afterPath="$PROJECT_DIR$/sport/template/sport/competitions_result.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sport/template/sport/grandtable2.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static0/my_js/sportsman.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sport/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sport/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport/template/sport/ResultTeam.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/ResultTeam.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport/template/sport/competitiondEdit.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/competitiondEdit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport/template/sport/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport/template/sport/grandtable2.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/grandtable2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport/template/sport/memadd.html" beforeDir="false" afterPath="$PROJECT_DIR$/sport/template/sport/memadd.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sport/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sport/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/svfusport/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/svfusport/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/header.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,15 +52,17 @@
     <session id="899236238">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="28" />
+          <entry key="project.closed" value="32" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.15" value="1" />
+          <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.27" value="1" />
           <entry key="project.open.time.29" value="1" />
           <entry key="project.open.time.33" value="1" />
-          <entry key="project.open.time.42" value="1" />
-          <entry key="project.open.time.43" value="5" />
+          <entry key="project.open.time.39" value="1" />
+          <entry key="project.open.time.42" value="2" />
+          <entry key="project.open.time.43" value="6" />
           <entry key="project.open.time.44" value="5" />
           <entry key="project.open.time.45" value="1" />
           <entry key="project.open.time.46" value="1" />
@@ -75,7 +72,7 @@
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="3" />
-          <entry key="project.opened" value="30" />
+          <entry key="project.opened" value="34" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -83,7 +80,7 @@
           <entry key="Python Console" value="4" />
           <entry key="html" value="2293" />
           <entry key="js" value="594" />
-          <entry key="py" value="6525" />
+          <entry key="py" value="7927" />
           <entry key="txt" value="197" />
         </counts>
       </usages-collector>
@@ -92,7 +89,7 @@
           <entry key="HTML" value="2293" />
           <entry key="JavaScript" value="594" />
           <entry key="PLAIN_TEXT" value="197" />
-          <entry key="Python" value="6529" />
+          <entry key="Python" value="7931" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -100,7 +97,7 @@
           <entry key="css" value="1" />
           <entry key="html" value="145" />
           <entry key="js" value="15" />
-          <entry key="py" value="54" />
+          <entry key="py" value="55" />
           <entry key="sqlite3" value="1" />
         </counts>
       </usages-collector>
@@ -110,7 +107,7 @@
           <entry key="HTML" value="145" />
           <entry key="JavaScript" value="15" />
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="54" />
+          <entry key="Python" value="55" />
         </counts>
       </usages-collector>
     </session>
@@ -148,11 +145,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sport/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
+            <state relative-caret-position="219">
+              <caret line="600" column="12" selection-start-line="600" selection-start-column="12" selection-end-line="608" selection-end-column="32" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sport/admin.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="19" column="32" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -207,7 +213,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-1" />
     <option name="width" value="1365" />
     <option name="height" value="744" />
@@ -217,7 +223,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -247,6 +252,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -371,9 +377,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18005952" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18005952" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -535,13 +540,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/manage.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sport/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="32" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sport/template/sport/ResultTeam.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -726,10 +724,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/sport/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="19" column="32" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sport/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
+        <state relative-caret-position="219">
+          <caret line="600" column="12" selection-start-line="600" selection-start-column="12" selection-end-line="608" selection-end-column="32" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
