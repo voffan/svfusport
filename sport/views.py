@@ -236,22 +236,42 @@ def result_team(request, competition_id):
     print("test")
     teamRes = TeamResult.objects.filter(competition__id = competition_id, team__not_resultable=True).order_by('result')
     teamresult ={}
+    request_url = request.GET.get('next')
+    print(request_url)
     teamresult['teamresult'] = teamRes
     competition_name = Competition.objects.get(id = competition_id)
     if any(teamresult['teamresult']):
-        print("yes")
         context = {
             'teamRes': teamresult,
-            'competition_name': competition_name
+            'competition_name': competition_name,
+            'request_url': request_url
         }
     else:
-        print("no")
         context = {
             'is_empty': True,
-            'competition_name': competition_name
+            'competition_name': competition_name,
+            'request_url': request_url
         }
     return render(request, 'sport/ResultTeam.html', context)
 
+#утверждение заявки
+@login_required()
+@permission_required("sport.delete_competition")
+def sportrequestapproved(request, competition_id):
+    competition_name = Competition.objects.get(id=competition_id)
+    requestlist = Team.objects.filter(competition=competition_id)
+    args={
+        'competition_name': competition_name,
+        'requestlist': requestlist
+    }
+    if request.POST:
+        data = request.POST.getlist('item-id')
+        for item in data:
+            obj = Team.objects.get(id=item)
+            obj.approved=True
+            obj.save()
+
+    return render(request, "sport/sportrequestapprove.html", args)
 
 '''функции изменения Team'''
 def form_change_view(request, id):
@@ -544,9 +564,14 @@ def create_result_team(request):
     return render(request, 'sport/createResult.html', context)
 
 
+
+
+'''Судейское решение'''
+@login_required()
+@permission_required("sport.delete_teamresult")
 def table_referee(request, competition_id):
     comp = Competition.objects.get(pk=competition_id)
-    team = Team.objects.filter(competition__exact = competition_id)
+    team = Team.objects.filter(competition__exact = competition_id, approved=True)
     team_results = TeamResult.objects.filter(competition__id=comp.id)
 
     print(team.count())
@@ -554,39 +579,100 @@ def table_referee(request, competition_id):
 
     if len(team_results) < len(team):
         teams = set(team.values_list('id', flat=True)) - set(team_results.values_list('team__id', flat=True))
-        for t in Team.objects.filter(id__in=teams):
+        for t in Team.objects.filter(id__in=teams, approved=True):
             tr = TeamResult()
             tr.competition = comp
             tr.team = t
             tr.points = 0
             tr.result = 0
             tr.save()
-        team_results = TeamResult.objects.filter(competition__id=comp.id)
+        team_results = TeamResult.objects.filter(competition__id=comp.id, team__approved=True)
 
     team_name = modelformset_factory(TeamResult, form = TeamResult_form, extra=0)
     formset = team_name(queryset=team_results)
     print(team)
     print(comp)
     context = {}
+    total = {}
     if request.method == 'POST':
         formset = team_name(request.POST)
         if formset.is_valid():
             try:
                 for item in formset:
-
                     result = item.save(commit = False)
-                    print(result.points)
-                    print(result.result)
-                    result.result = result.points
                     result = item.save()
-
-                    if result.points == 0:
-                        result.points = team.count()
-                        result.result = result.points
-                        result = item.save()
             except:
                 return HttpResponse('Errorss!!')
+
+        if ('close_CM' in request.POST) == True:
+            comp.result = True
+            comp.save()
+        team_res = dict(TeamResult.objects.filter(team__in=team, team__approved=True ).values_list('team__id', 'points').extra(where=['points != result']))
+        count_pesult = len(TeamResult.objects.filter(team__in=team, team__approved=True).values_list('team__id', 'points').extra(where=['points != result']))
+        print(team_res)
+        maximum = max(team_res.values())
+        # minimum = min(team_res.values())
+        minimum = 1
+        print(team_res)
+        print(maximum)
+        # print(count_pesult)
+        # dict2 = team_res.copy()
+        for g in team_res:
+
+            for k, v in team_res.items():
+                if v == maximum:
+                    obj = TeamResult.objects.get(team = k)
+                    obj.result = minimum
+                    obj.save()
+                    # dict2.pop(k)
+                    print(obj)
+                    maximum -= 1
+                    minimum += 1
+
         return HttpResponseRedirect('/CM/teamresult/')
+
+
+    # max = result.points
+    # min = team.count()
+    # if result.points == 0 or result.points == '':
+    #     result.points = team.count()
+    #     result.result = result.points
+    #     result = item.save()
+    # for item in formset:
+    #     result = item.save(commit = False)
+    #
+    #     if result.points == result.points:
+    #         continue
+    #     elif result.points < max:
+    #         result.result = max
+    #         min = result.points
+    #         result = item.save()
+    #     elif result.points > max:
+    #         result.result = min
+    #         min = result.points
+    #         result = item.save()
+    #     elif result.points == max:
+    #         result.result = team.count()
+    #         min = result.points
+    #         result = item.save()
+    #     print(result.points)
+
+    # team_res = dict(TeamResult.objects.filter(team__in=team).values_list('team__id', 'points').extra(where=['points != result']))
+    # maximum = max(team_res.values())
+    # minimum = min(team_res.values())
+    # print(team_res)
+    # print(maximum)
+    # # dict2 = team_res.copy()
+    # for g in team_res:
+    #
+    #     for k, v in team_res.items():
+    #         if v == maximum:
+    #             obj = TeamResult.objects.get(team = k)
+    #             obj.result = minimum
+    #             obj.save()
+    #             # dict2.pop(k)
+    #             print(obj)
+
     context['formset'] = formset
     context['competition'] = comp
     return render(request, 'sport/Results.html', context)
@@ -607,7 +693,7 @@ def grand_table(request):
     for d in deps:
         s = 0
         table[d.name] = []
-        team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True).values_list('competition__id', 'result'))
+        team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True, team__approved=True).values_list('competition__id', 'result'))
         for comp in competitions:
             table[d.name].append(team_results[comp.id] if comp.id in team_results.keys() else len(TeamResult.objects.filter(competition__id=comp.id)) + 1)
             s += table[d.name][-1]

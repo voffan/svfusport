@@ -3,7 +3,7 @@
 <div class="container" style="min-height: 79.5vh;">
   <h3>Результаты соревнования: {{ competition_name }}</h3>
   {% if is_empty %}
-  <a href="{{ request.POST['next'] }}" class="btn btn-primary">Назад</a><p>По данному соревнованию результатов пока нет</p>
+  <a href="{{ request_url }}" class="btn btn-primary">Назад</a><p>По данному соревнованию результатов пока нет</p>
   <p>Вернитесь позже</p>
   {% else %}
   <table class="table table-hover table-bordered table-sm table-justified">

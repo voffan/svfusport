@@ -32,6 +32,7 @@ urlpatterns = [
     path('competition/', views.competition, name="competition"),
     #path('table2/', TemplateView.as_view(template_name="sport/competition.html", extra_context={"name": Place.name})),
     path('competitionedit/<int:competition_id>',views.competitionedit, name="competitionedit"),
+    path('requestapproved/<int:competition_id>',views.sportrequestapproved, name="requestapproved"),
     path('sportadd', views.sport_adding, name="sportadding"),
     path('placeadd', views.place_adding, name="placeadding"),
     path('competitioncreate', views.competitioncreate, name="competitioncreate"),

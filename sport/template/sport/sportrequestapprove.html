@@ -1,0 +1,56 @@
+{% extends "sport/index.html" %}
+{% block sportrequestapproved %}
+<div class="container-fluid">
+  <form class="" action="" method="post">
+    {% csrf_token %}
+    <div class="row" style="min-height:82vh;">
+      <div class="col-2 padd-top">
+        <input type="submit" name="save" value="Утвердить" class="btn btn-block btn-primary">
+      </div>
+      <div class="col-9 padd-top">
+        <h3>Поданные заявки на {{ competition_name }}</h3>
+        <table class="table table-hover table-bordered table-sm table-justified">
+          <thead>
+            <tr>
+              <td style="width: 5%; text-align: center;"> <input type="checkbox" class="all" name="" value=""> </td>
+              <td style="width: 8%;">#</td>
+              <td style="width: 8%;">УчП</td>
+              <td>Команда</td>
+              <td style="width: 12%;">В зачете</td>
+              <td style="width: 12%;">Утверждена</td>
+              <td style="width: 10%;">Утвердить</td>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in requestlist %}
+              <tr>
+                <td style="text-align: center;"><input type="checkbox" class="one" name="item-id" value="{{ item.id }}"></td>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.organization }}</td>
+                <td>{{ item.name }}</td>
+                <td>{% if item.not_resultable %} В зачете {% else %} Не в зачете {% endif %}</td>
+                <td>{% if item.approved %} Утверждена {% else %} Не утверждена {% endif %}</td>
+                <td><input type="submit" name="save" data="{{ item.id }}" value="Утвердить" class="btn btn-block btn-primary"></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  $(".all").on("change",function(){
+    $(".one").prop("checked", this.checked);
+    console.log("check");
+  });
+  $(".one").on("change", function(){
+    if($(".one:not(:checked)").length==0){
+      $(".all").prop("checked", true);
+      console.log("check");
+    }else{
+      $(".all").prop("checked", false);
+    }
+  });
+</script>
+{% endblock %}
