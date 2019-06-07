@@ -1,4 +1,4 @@
-import datetime
+import datetime, copy
 from django.template.context_processors import csrf
 from django.db import IntegrityError
 from django.contrib import auth
@@ -355,6 +355,8 @@ def member_remove_view(request, id):
 
 
 '''редактировать Team'''
+@login_required()
+@permission_required("sport.delete_team")
 def form_change_view(request, id):
     team_instance = Team.objects.get(pk = id)
 
@@ -382,6 +384,8 @@ def form_change_view(request, id):
 
 
 ''' редактировать спортсмена'''
+@login_required()
+@permission_required("sport.delete_teammember")
 def member_change_view(request, id):
     sportsman = TeamMember.objects.get(pk = id)
     teamMemb = get_object_or_404(TeamMember, id=id)
@@ -428,6 +432,9 @@ def form_create_view(request):
         if form.is_valid() and formset.is_valid():
             try:
                 team = form.save()'''
+
+@login_required()
+@permission_required("sport.delete_teammember")
 def member_create_view(request):
     context = {}
     #team = TeamMember.objects.get(pk = id)
@@ -464,7 +471,10 @@ def member_create_view(request):
     return render(request, 'sport/teamadding.html', context)
 
 
+
 ''' создать заявку'''
+@login_required()
+@permission_required("sport.delete_team")
 def form_create_view(request):
     form_member = modelformset_factory(TeamMember, form = TeamMember_Form, can_delete = True)
     formset = form_member(queryset = TeamMember.objects.none())
@@ -486,6 +496,8 @@ def form_create_view(request):
 
 
 '''Добавить спортсмена'''
+@login_required()
+@permission_required("sport.delete_teammember")
 def member_create_view(request):
     context = {}
     form1 = TeamMember_Form(request.POST)
@@ -595,12 +607,15 @@ def table_referee(request, competition_id):
     context = {}
     total = {}
     if request.method == 'POST':
+        if 'close_CM' in request.POST:
+            comp.result = True
+            comp.save()
         formset = team_name(request.POST)
         if formset.is_valid():
             try:
                 for item in formset:
-                    result = item.save(commit = False)
                     result = item.save()
+<<<<<<< HEAD
             except:
                 return HttpResponse('Errorss!!')
 
@@ -672,6 +687,23 @@ def table_referee(request, competition_id):
     #             obj.save()
     #             # dict2.pop(k)
     #             print(obj)
+=======
+            except Exception:
+                return HttpResponse('Ошибка сохранения очков!!')
+        team_res = TeamResult.objects.filter(competition__id=comp.id, team__not_resultable=True).order_by('-points')
+        try:
+            i = 1
+            prev = team_res.first().points
+            for team_r in team_res:
+                if prev > team_r.points:
+                    i += 1
+                team_r.result = i
+                team_r.save()
+                prev = team_r.points
+        except Exception:
+            return HttpResponse('Ошибка при назначении мест!!')
+        return HttpResponseRedirect(reverse('sport:teamresult', args=[comp.id]))
+>>>>>>> 0c2ecee0d1fbcb99cea9073f410015496691fac8
 
     context['formset'] = formset
     context['competition'] = comp
@@ -693,9 +725,14 @@ def grand_table(request):
     for d in deps:
         s = 0
         table[d.name] = []
+<<<<<<< HEAD
         team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True, team__approved=True).values_list('competition__id', 'result'))
+=======
+
+        team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True, points__gt=0).values_list('competition__id', 'result'))
+>>>>>>> 0c2ecee0d1fbcb99cea9073f410015496691fac8
         for comp in competitions:
-            table[d.name].append(team_results[comp.id] if comp.id in team_results.keys() else len(TeamResult.objects.filter(competition__id=comp.id)) + 1)
+            table[d.name].append(team_results[comp.id] if comp.id in team_results.keys() else len(TeamResult.objects.filter(competition__id=comp.id, points__gt=0, team__not_resultable=True)) + 1)
             s += table[d.name][-1]
         table[d.name].append(s)
     table = sorted(table.items(), key=lambda x: x[1][-1])
@@ -706,7 +743,7 @@ def grand_table(request):
             place += 1
         prev = item[1][-1]
         item[1].append(place)
-    return render(request, 'sport/grandTable2.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
+    return render(request, 'sport/grandTable.html', {'form': Period_for_Table_Form(), 'grand_table': dict(table), 'daten': competitions})
 
 
 '''Добавить УЧП'''

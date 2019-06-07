@@ -21,7 +21,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('CM/', include('sport.urls',  namespace="sport")),
-    path('sport/', include('sport.urls')),
+    #path('sport/', include('sport.urls')),
     path('auth/', include('syslogin.urls', namespace="syslogin")),
     path('', views.index),
 

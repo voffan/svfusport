@@ -1,4 +1,5 @@
 # Create your models here.
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
@@ -92,7 +93,7 @@ class Team(models.Model):
 
 
 class TeamResult(models.Model):
-    points = models.PositiveIntegerField(verbose_name = "Очки", null=True, blank=True)
+    points = models.DecimalField(verbose_name = "Очки", null=True, blank=True, decimal_places=2, max_digits=5, validators=[MinValueValidator(limit_value=0)])
     competition = models.ForeignKey(Competition, verbose_name = "Соревнование", db_index = True, on_delete=models.CASCADE)
     result = models.PositiveIntegerField(verbose_name= "Место", null=True, blank=True)
     team = models.ForeignKey(Team, verbose_name="Команда", db_index=True, on_delete=models.CASCADE)
