@@ -585,10 +585,6 @@ def table_referee(request, competition_id):
     comp = Competition.objects.get(pk=competition_id)
     team = Team.objects.filter(competition__exact = competition_id, approved=True)
     team_results = TeamResult.objects.filter(competition__id=comp.id)
-
-    print(team.count())
-    print(len(team_results))
-
     if len(team_results) < len(team):
         teams = set(team.values_list('id', flat=True)) - set(team_results.values_list('team__id', flat=True))
         for t in Team.objects.filter(id__in=teams, approved=True):
@@ -599,11 +595,8 @@ def table_referee(request, competition_id):
             tr.result = 0
             tr.save()
         team_results = TeamResult.objects.filter(competition__id=comp.id, team__approved=True)
-
     team_name = modelformset_factory(TeamResult, form = TeamResult_form, extra=0)
     formset = team_name(queryset=team_results)
-    print(team)
-    print(comp)
     context = {}
     total = {}
     if request.method == 'POST':
@@ -615,10 +608,8 @@ def table_referee(request, competition_id):
             try:
                 for item in formset:
                     result = item.save()
-<<<<<<< HEAD
             except:
                 return HttpResponse('Errorss!!')
-
         if ('close_CM' in request.POST) == True:
             comp.result = True
             comp.save()
@@ -633,7 +624,6 @@ def table_referee(request, competition_id):
         # print(count_pesult)
         # dict2 = team_res.copy()
         for g in team_res:
-
             for k, v in team_res.items():
                 if v == maximum:
                     obj = TeamResult.objects.get(team = k)
@@ -643,7 +633,6 @@ def table_referee(request, competition_id):
                     print(obj)
                     maximum -= 1
                     minimum += 1
-
         return HttpResponseRedirect('/CM/teamresult/')
 
 
@@ -687,9 +676,9 @@ def table_referee(request, competition_id):
     #             obj.save()
     #             # dict2.pop(k)
     #             print(obj)
-=======
-            except Exception:
-                return HttpResponse('Ошибка сохранения очков!!')
+
+            #except Exception:
+        '''        return HttpResponse('Ошибка сохранения очков!!')
         team_res = TeamResult.objects.filter(competition__id=comp.id, team__not_resultable=True).order_by('-points')
         try:
             i = 1
@@ -702,8 +691,7 @@ def table_referee(request, competition_id):
                 prev = team_r.points
         except Exception:
             return HttpResponse('Ошибка при назначении мест!!')
-        return HttpResponseRedirect(reverse('sport:teamresult', args=[comp.id]))
->>>>>>> 0c2ecee0d1fbcb99cea9073f410015496691fac8
+        return HttpResponseRedirect(reverse('sport:teamresult', args=[comp.id]))'''
 
     context['formset'] = formset
     context['competition'] = comp
@@ -725,12 +713,9 @@ def grand_table(request):
     for d in deps:
         s = 0
         table[d.name] = []
-<<<<<<< HEAD
         team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True, team__approved=True).values_list('competition__id', 'result'))
-=======
 
         team_results = dict(TeamResult.objects.filter(team__organization__id=d.id, team__not_resultable=True, points__gt=0).values_list('competition__id', 'result'))
->>>>>>> 0c2ecee0d1fbcb99cea9073f410015496691fac8
         for comp in competitions:
             table[d.name].append(team_results[comp.id] if comp.id in team_results.keys() else len(TeamResult.objects.filter(competition__id=comp.id, points__gt=0, team__not_resultable=True)) + 1)
             s += table[d.name][-1]
